@@ -135,27 +135,31 @@ public class PileUI : MonoBehaviour {
     {
         Vector3 pos = Vector3.zero;
         GameObject prefab = null;
-        Card.Type type = CardData.Instance.GetCard(cardName, false).type;
+        Card info = CardData.Instance.GetCard(cardName, false);
+        Card.Type type = info.type;
 
         if (type == Card.Type.bonus)
         {
             pos = bonusPilePos.position;
             prefab = bonusCardPrefab;
         }
-        else
+        else if (type == Card.Type.mogi)
         {
             pos = mogisPilePos.position;
             prefab = mogisCardPrefab;
+            
         }
         
         GameObject cardObj = Instantiate(prefab, pos, Quaternion.identity);
-        
-        CardMotion motion = cardObj.GetComponent<CardMotion>();
-        motion.Init(this, byController);
-        motion.PileToHand(conpleteEffect);
 
         CardDisplay display = cardObj.GetComponent<CardDisplay>();
         display.Init(cardName);
         cardObj.name = cardName;
+
+        CardMotion motion = cardObj.GetComponent<CardMotion>();
+        motion.Init(this, info, byController);
+        motion.PileToHand(conpleteEffect);
+
+        if (type == Card.Type.mogi) cardObj.GetComponent<MogiEntity>().Init((MogiCard)info);
     }
 }

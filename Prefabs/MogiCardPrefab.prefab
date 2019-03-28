@@ -99,6 +99,57 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95f456b039c0dba4db88f524577ee8a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.00021439939
+      outSlope: 0.00021439939
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.1411483
+      value: 0.19829668
+      inSlope: 2.0708582
+      outSlope: 2.0708582
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.19617224
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.2911483
+      value: 0.94829667
+      inSlope: 0.960495
+      outSlope: 0.960495
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.9212581
+      outWeight: 0.4568366
+    - serializedVersion: 3
+      time: 0.39483616
+      value: 0.99872196
+      inSlope: -0.00009082723
+      outSlope: -0.00009082723
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.5247851
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.0008913077
+      outSlope: -0.0008913077
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &114884862276694498
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -110,6 +161,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3fd7f4a4d75c4f46b5c980285a751f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  render: {fileID: 0}
   animation: {fileID: 114613637358250206}
   animationRender: {fileID: 212617367733467340}
   bgRender: {fileID: 212940130891452148}

@@ -5,24 +5,28 @@ using UnityEngine;
 
 public class CardMotion : MonoBehaviour
 {
+    public new AnimationCurve animation;
+
     public SpriteRenderer render { get; private set; }
     public Transform cardTran { get; private set; }
     public bool isController { get; private set; }
     public bool moving { get; private set; }
-    public enum position { none, inHand, inSlot }
+    public enum status { none, inHand, inSlot, attacking }
 
-    private position curPosition;
+    private status curStatus;
     private CardDisplay cardUI;
     private bool showingDetail;
     private Vector3 normalPos;
     private int normalsortingOrder;
+    private Card cardInfo;
 
-    public void Init(PileUI pileUI, bool isController)
+    public void Init(PileUI pileUI, Card cardInfo, bool isController)
     {
         cardTran = transform;
-        curPosition = position.none;
+        curStatus = status.none;
         this.isController = isController;
         normalPos = cardTran.position;
+        this.cardInfo = cardInfo;
         render = GetComponent<SpriteRenderer>();
         cardUI = GetComponent<CardDisplay>();
     }
@@ -43,7 +47,7 @@ public class CardMotion : MonoBehaviour
     {        
         MotionManager.AddMotion();
         HandUI.Instance.InsertCard(this, isController);
-        curPosition = position.inHand;
+        curStatus = status.inHand;
         ControllerBehaviour.Instance.AddNewCard(this);
 
         MoveToPosition(HandUI.Instance.GetCardPosition(this, isController),
@@ -203,7 +207,7 @@ public class CardMotion : MonoBehaviour
 
         //move to hand
         HandUI.Instance.InsertCard(this, isController);
-        curPosition = position.inHand;
+        curStatus = status.inHand;
 
         ControllerBehaviour.Instance.AddNewCard(this);
         
@@ -232,15 +236,15 @@ public class CardMotion : MonoBehaviour
             Vector3 choosePos = Camera.main.ScreenToWorldPoint(mousePos);
             choosePos.z = 0;
 
-            if (this.curPosition == position.inHand)
+            if (this.curStatus == status.inHand)
             {
                 //front of all               
                 render.sortingOrder = 1000;
                 cardTran.position = choosePos;
             }
-            else if (this.curPosition == position.inSlot)
+            else if (this.curStatus == status.inSlot)
             {
-                AttackArrow.Instance.Display(cardTran.position, choosePos);
+                if(cardInfo.type == Card.Type.mogi) AttackArrow.Instance.Display(cardTran.position, choosePos);
             }
         }
     }
@@ -311,7 +315,8 @@ public class CardMotion : MonoBehaviour
                 if (opponentMogis[i].render.bounds.Contains(choosePos))
                 {
                     //attack target
-                    Debug.Log("attack : " + opponentMogis[i].name);
+                    //Debug.Log("attack : " + opponentMogis[i].name);
+                    MogiAttackAnimation(opponentMogis[i]);
                     break;
                 }
             }
@@ -324,8 +329,6 @@ public class CardMotion : MonoBehaviour
         {
             if (BoardUI.Instance.putDownCardArea.bounds.Contains(cardTran.position))
             {
-                Card cardInfo = CardData.Instance.GetCard(name, false);
-
                 //putcard down to board
                 if (cardInfo.manaCost <= Game.Instance.controller.activity.actionPoints)
                 {
@@ -364,7 +367,7 @@ public class CardMotion : MonoBehaviour
     {
         if (BoardUI.Instance.InsertToSlot(this, isController))
         {
-            curPosition = position.inSlot;
+            curStatus = status.inSlot;
             HandUI.Instance.RemoveCard(this, isController);
         }
     }
@@ -373,6 +376,27 @@ public class CardMotion : MonoBehaviour
     {
         HandUI.Instance.RemoveCard(this, isController);
         BoardUI.Instance.PutOnTopMogi(this, mogi, isController);
+    }
+
+    public async void MogiAttackAnimation(CardMotion target)
+    {
+        curStatus = status.attacking;
+
+        Vector3 startPosition = transform.position;
+
+        float timeCouter = 0;
+
+        while (timeCouter < 1)
+        {
+            timeCouter += Time.deltaTime * 2;
+            if (timeCouter > 1) timeCouter = 1;
+            float lerp = animation.Evaluate(timeCouter);
+            cardTran.position = Vector3.Lerp(startPosition, target.cardTran.position, lerp);
+            await new WaitForUpdate();
+        }
+
+        cardTran.position = startPosition;
+        curStatus = status.inSlot;
     }
 
     /*
