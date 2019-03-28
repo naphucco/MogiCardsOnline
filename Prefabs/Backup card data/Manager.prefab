@@ -1,0 +1,139 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1590784695954484}
+  m_IsPrefabAsset: 1
+--- !u!1 &1590784695954484
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4327491007465836}
+  - component: {fileID: 114980550975417476}
+  - component: {fileID: 114679292724260728}
+  - component: {fileID: 114524239783335968}
+  - component: {fileID: 114639408961897500}
+  m_Layer: 0
+  m_Name: Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4327491007465836
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1590784695954484}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.79756075, y: 0.68678445, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114524239783335968
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1590784695954484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98e8061fab6599f4a87682d06cd7518b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114639408961897500
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1590784695954484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11b0ac77882df7f48a4de90a58d568e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardMotions: []
+--- !u!114 &114679292724260728
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1590784695954484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc348cdb83383a140ad9420e56cbbd82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allMogi:
+  - {fileID: 11400000, guid: 6124ffd5a6892844c980e0809009cf1e, type: 2}
+  - {fileID: 11400000, guid: f1228cb7f8cfcc84a8665ce28c479912, type: 2}
+  - {fileID: 11400000, guid: 9afdc7873307b2c44a76619416ad7a1c, type: 2}
+  - {fileID: 11400000, guid: 2cb0d4cde9a17bd47bc3b35730662a55, type: 2}
+  - {fileID: 11400000, guid: 3c30116c0df3f89468ff16e556cfc7bc, type: 2}
+  - {fileID: 11400000, guid: 9af4c7a2a4e23b640bcc24b694a54edf, type: 2}
+  - {fileID: 11400000, guid: 4a51026e9968e53428838548ec24ccf6, type: 2}
+  - {fileID: 11400000, guid: c9576c39fa446b5439e9588149a6a12d, type: 2}
+  - {fileID: 11400000, guid: f6e5dda952d2edd4a9aa5b738308a6fd, type: 2}
+  - {fileID: 11400000, guid: 971c2d8194980bc4f912e3b3996668b2, type: 2}
+  - {fileID: 11400000, guid: baf66531f4d5da94fb998b03b23039d8, type: 2}
+  - {fileID: 11400000, guid: e500c041d18aa284da359013dacbb968, type: 2}
+  allBonus:
+  - {fileID: 11400000, guid: 607ff30779f5bd2478c89718b6a0ac63, type: 2}
+  - {fileID: 11400000, guid: 3507faf47e708d44792b1d5723538e97, type: 2}
+  - {fileID: 11400000, guid: 055ddd4dc41c3d14eb42313cfe43af76, type: 2}
+  - {fileID: 11400000, guid: 65681ea01837f9e4ba7f5419d599dfe2, type: 2}
+  - {fileID: 11400000, guid: 3d8e7a131ca0db742b7b7356e14817ed, type: 2}
+  - {fileID: 11400000, guid: ed4dd9c370d6c6148a18330fb13f3b91, type: 2}
+  - {fileID: 11400000, guid: a6894879c5b878a41a694b1ceeb5d2d7, type: 2}
+--- !u!114 &114980550975417476
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1590784695954484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87ad15eba2050ab46a65fcfc15ee8b4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller:
+    slots:
+      number: 5
+    hand:
+      cards: []
+    piles:
+      mogiPile:
+        discardPile:
+          cardInPile: []
+        cardInPile: []
+      bonusPile:
+        discardPile:
+          cardInPile: []
+        cardInPile: []
+  opponent:
+    slots:
+      number: 5
+    hand:
+      cards: []
+    piles:
+      mogiPile:
+        discardPile:
+          cardInPile: []
+        cardInPile: []
+      bonusPile:
+        discardPile:
+          cardInPile: []
+        cardInPile: []
