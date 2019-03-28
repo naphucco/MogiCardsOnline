@@ -1,0 +1,24 @@
+[33mcommit df677a108ec2206d62d0c635bf027a34522b4ead[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Merge: 30095be 491e6f7
+Author: nguyenvuidanang@gmail.com <nguyenvuidanang@gmail.com>
+Date:   Thu Mar 28 11:08:02 2019 +0700
+
+    Merge branch 'master' of https://github.com/naphucco/MogiCardsOnline
+
+[33mcommit 30095be51d06e05af8fdb294c71e8fdc534d2e8b[m
+Author: nguyenvuidanang@gmail.com <nguyenvuidanang@gmail.com>
+Date:   Thu Mar 28 11:05:54 2019 +0700
+
+    Ghi chú Commit
+
+[33mcommit 491e6f7be870e3395c35cbf999260db2530300c1[m
+Author: nguyenvuidanang@gmail.com <nguyenvuidanang@gmail.com>
+Date:   Thu Mar 28 11:00:49 2019 +0700
+
+    start test
+
+[33mcommit 61fe744547114455aadbcf8cf26d5aa87b54a04c[m
+Author: nguyenvuidanang@gmail.com <nguyenvuidanang@gmail.com>
+Date:   Thu Mar 28 10:27:16 2019 +0700
+
+    first
