@@ -31,9 +31,9 @@ public class AIMoveCardToBoard : StateMachineBehaviour {
         await new WaitForSeconds(1);
 
         //get useable card
-        List <CardMotion> allCardInHand = HandUI.Instance.cardInOpponentHand;
-        List<CardMotion> mogiInBoards = BoardUI.Instance.MogiInBoard(false);
-        List<CardMotion> useableCard = new List<CardMotion>();
+        List <CardEntity> allCardInHand = HandUI.Instance.cardInOpponentHand;
+        List<MogiEntity> mogiInBoards = BoardUI.Instance.MogiInBoard(false);
+        List<CardEntity> useableCard = new List<CardEntity>();
 
         //put card to slot
         //or top of mogi
@@ -73,13 +73,14 @@ public class AIMoveCardToBoard : StateMachineBehaviour {
 
         if (useableCard.Count > 0)
         {
-            CardMotion card = useableCard[Random.Range(0, useableCard.Count)];
+            CardMotion card = useableCard[Random.Range(0, useableCard.Count)].motion;
             Card cardData = CardData.Instance.GetCard(card.name, false);
 
             if (cardData.putOn == Card.PutOn.emptySlot)
             {
                 card.HandToOpponentSlot(BoardUI.Instance.GetFirstEmptySlot(false), () =>
                 {
+                    AIBehaviour.Instance.inAction = false;
                     //repeat
                     animator.SetInteger("action", 2);
                 });

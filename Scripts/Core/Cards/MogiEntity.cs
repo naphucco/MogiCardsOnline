@@ -1,16 +1,44 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MogiEntity : MonoBehaviour
+public class MogiEntity : CardEntity
 {
+    public override CardDisplay display { get; set; }
+    public override CardMotion motion { get; set; }
+    public override Card info { get; set; }
+
     public int HPRemain;
     public int maxHP;
     public int attackPoint;
 
-    public void Init(MogiCard info)
+    private Action onDead;
+
+    public void Fight(MogiEntity target)
     {
-        attackPoint = info.attackPoint;
-        HPRemain = maxHP = info.hp;
+        target.TakeDamage(attackPoint);
+        this.TakeDamage(target.attackPoint);
+    }
+
+    public void TakeDamage(int attackPoint)
+    {
+        HPRemain -= attackPoint;
+        if (HPRemain <= 0) onDead?.Invoke();
+    }
+
+    public void AddDeadEvent(Action deadEvent)
+    {
+        this.onDead += deadEvent;
+    }
+
+    public override void Init(Card info, CardDisplay display, CardMotion motion)
+    {
+        MogiCard cardInfo = (MogiCard)info;
+        attackPoint = cardInfo.attackPoint;
+        HPRemain = maxHP = cardInfo.hp;
+        this.display = display;
+        this.motion = motion;
+        this.info = info;
     }
 }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CardMotion : MonoBehaviour
@@ -11,22 +9,24 @@ public class CardMotion : MonoBehaviour
     public Transform cardTran { get; private set; }
     public bool isController { get; private set; }
     public bool moving { get; private set; }
+
     public enum status { none, inHand, inSlot, attacking }
 
     private status curStatus;
     private CardDisplay cardUI;
     private bool showingDetail;
     private Vector3 normalPos;
-    private int normalsortingOrder;
-    private Card cardInfo;
+    private int normalsortingOrder;    
+    private Action<CardEntity> onDeslect;
+    private CardEntity entity;
 
-    public void Init(PileUI pileUI, Card cardInfo, bool isController)
+    public void Init(CardEntity entity, bool isController)
     {
-        cardTran = transform;
-        curStatus = status.none;
-        this.isController = isController;
+        cardTran = transform;        
+        curStatus = status.none;        
         normalPos = cardTran.position;
-        this.cardInfo = cardInfo;
+        this.entity = entity;
+        this.isController = isController;
         render = GetComponent<SpriteRenderer>();
         cardUI = GetComponent<CardDisplay>();
     }
@@ -46,11 +46,11 @@ public class CardMotion : MonoBehaviour
     private void PileToOpponentHand(Action complete)
     {        
         MotionManager.AddMotion();
-        HandUI.Instance.InsertCard(this, isController);
+        HandUI.Instance.InsertCard(entity, isController);
         curStatus = status.inHand;
-        ControllerBehaviour.Instance.AddNewCard(this);
+        CardBehaviour.Instance.AddNewCard(entity);
 
-        MoveToPosition(HandUI.Instance.GetCardPosition(this, isController),
+        MoveToPosition(HandUI.Instance.GetCardPosition(entity, isController),
             HandUI.Instance.cardInOpponentHand.Count * 2, false, 10, () =>
          {
              MotionManager.RunComplete();
@@ -58,7 +58,7 @@ public class CardMotion : MonoBehaviour
          });
     }
 
-    public async void HandToOpponentTopMogi(CardMotion mogi, Action complete)
+    public async void HandToOpponentTopMogi(MogiEntity mogi, Action complete)
     {
         MotionManager.AddMotion();
         render.sortingOrder = 1000;
@@ -156,11 +156,19 @@ public class CardMotion : MonoBehaviour
         MoveToPosition(slot.slotTransform.position, 1, false, 10, () =>
         {
             //move to hand
-            MotionManager.RunComplete();
-            AIBehaviour.Instance.inAction = false;
+            MotionManager.RunComplete();            
             MoveToSlot();
             complete.Invoke();
         });
+    }
+
+    public void MoveToSlot()
+    {
+        if (BoardUI.Instance.InsertToSlot(entity, isController))
+        {
+            curStatus = status.inSlot;
+            HandUI.Instance.RemoveCard(entity, isController);
+        }
     }
 
     private async void PileToControllerHand(Action complete)
@@ -206,12 +214,12 @@ public class CardMotion : MonoBehaviour
         await new WaitForSeconds(0.2f);
 
         //move to hand
-        HandUI.Instance.InsertCard(this, isController);
+        HandUI.Instance.InsertCard(entity, isController);
         curStatus = status.inHand;
 
-        ControllerBehaviour.Instance.AddNewCard(this);
+        CardBehaviour.Instance.AddNewCard(entity);
         
-        MoveToPosition(HandUI.Instance.GetCardPosition(this, isController),
+        MoveToPosition(HandUI.Instance.GetCardPosition(entity, isController),
             HandUI.Instance.cardInControllerHand.Count * 2, false, 20, () =>
             {
                 MotionManager.RunComplete();
@@ -224,11 +232,8 @@ public class CardMotion : MonoBehaviour
     //run when selecting
     public void Selecting()
     {
-        if (!isSelecting)
-        {
-            isSelecting = true;            
-        }
-        
+        isSelecting = true;
+
         if (isController)
         {
             Vector3 mousePos = Input.mousePosition;
@@ -244,9 +249,18 @@ public class CardMotion : MonoBehaviour
             }
             else if (this.curStatus == status.inSlot)
             {
-                if(cardInfo.type == Card.Type.mogi) AttackArrow.Instance.Display(cardTran.position, choosePos);
+                if (entity.info.type == Card.Type.mogi)
+                {
+                    //BoardUI.Instance.
+                    AttackArrow.Instance.Display(cardTran.position, choosePos);
+                }
             }
         }
+    }
+
+    public void AddDeselectCardEvent(Action<CardEntity> cardEvent)
+    {
+        onDeslect += cardEvent;
     }
 
     public void DeSelecting()
@@ -255,13 +269,7 @@ public class CardMotion : MonoBehaviour
         {
             isSelecting = false;
             render.sortingOrder = normalsortingOrder;
-            //về mới sortingOrder lại
-            //render.sortingOrder = normalSortingOrder;
-            if (isController)
-            {
-                CheckMoveToControllerBoard(); //move to board
-                CheckMogiControllerAttack(); //mogi attack
-            }
+            onDeslect?.Invoke(entity);
         }
 
         if (!moving && isController)
@@ -289,122 +297,69 @@ public class CardMotion : MonoBehaviour
         onComplete?.Invoke();
     }
 
-    private async void Dissolving(Action complete = null)
+    public void MoveToTopOfMogi(CardEntity mogi)
+    {
+        HandUI.Instance.RemoveCard(entity, isController);
+        BoardUI.Instance.PutOnTopMogi((MogiEntity)entity, (MogiEntity)mogi, isController);
+    }
+
+    public async void Dissolving(Action complete = null)
     {
         await new WaitForSeconds(1f);
-        ControllerBehaviour.Instance.RemoveCard(this);
+        CardBehaviour.Instance.RemoveCard(entity);
         complete?.Invoke();
         EffectManager.Instance.Instantiate("Bonus_is_used", cardTran.position);
         Destroy(gameObject);
     }
-
-    private void CheckMogiControllerAttack()
-    {
-        if (AttackArrow.Instance.showing)
-        {
-            AttackArrow.Instance.Hide();
-
-            Vector3 mousePos = Input.mousePosition;
-            mousePos.z = -Camera.main.transform.position.z; // select distance = 10 units from the camera
-            Vector3 choosePos = Camera.main.ScreenToWorldPoint(mousePos);
-            choosePos.z = 0;
-            List<CardMotion> opponentMogis = BoardUI.Instance.MogiInBoard(false);
-
-            for (int i = 0; i < opponentMogis.Count; i++)
-            {
-                if (opponentMogis[i].render.bounds.Contains(choosePos))
-                {
-                    //attack target
-                    //Debug.Log("attack : " + opponentMogis[i].name);
-                    MogiAttackAnimation(opponentMogis[i]);
-                    break;
-                }
-            }
-        }
-    }
-
-    private void CheckMoveToControllerBoard()
-    {
-        if (HandUI.Instance.cardInControllerHand.Contains(this))
-        {
-            if (BoardUI.Instance.putDownCardArea.bounds.Contains(cardTran.position))
-            {
-                //putcard down to board
-                if (cardInfo.manaCost <= Game.Instance.controller.activity.actionPoints)
-                {
-                    if (cardInfo.putOn == Card.PutOn.emptySlot)
-                    {
-                        MoveToSlot();
-                    }
-                    else
-                    {
-                        CheckTopOfControllerMogi(BoardUI.Instance.MogiInBoard(true));
-                    }
-                }
-            }
-        }
-    }
-
-    public void CheckTopOfControllerMogi(List<CardMotion> mogiList)
-    {
-        if (mogiList.Count > 0)
-        {
-            for (int i = 0; i < mogiList.Count; i++)
-            {
-                Vector2 cardPos = cardTran.position;
-                CardMotion mogiCard = mogiList[i];
-
-                if (mogiList[i].render.bounds.Contains(cardPos))
-                {
-                    MoveToTopOfMogi(mogiCard);
-                    Dissolving();
-                }
-            }
-        }
-    }
     
-    private void MoveToSlot()
-    {
-        if (BoardUI.Instance.InsertToSlot(this, isController))
-        {
-            curStatus = status.inSlot;
-            HandUI.Instance.RemoveCard(this, isController);
-        }
-    }
-
-    private void MoveToTopOfMogi(CardMotion mogi)
-    {
-        HandUI.Instance.RemoveCard(this, isController);
-        BoardUI.Instance.PutOnTopMogi(this, mogi, isController);
-    }
-
-    public async void MogiAttackAnimation(CardMotion target)
+    public async void MogiAttackAnimation(CardMotion target,Action onHitTarget)
     {
         curStatus = status.attacking;
-
+        render.sortingOrder = 1000;
         Vector3 startPosition = transform.position;
 
         float timeCouter = 0;
+        float distanceToTarget = 0;
+        bool hadVibrate = false;
 
         while (timeCouter < 1)
         {
             timeCouter += Time.deltaTime * 2;
             if (timeCouter > 1) timeCouter = 1;
-            float lerp = animation.Evaluate(timeCouter);
+            float lerp = animation.Evaluate(timeCouter);            
             cardTran.position = Vector3.Lerp(startPosition, target.cardTran.position, lerp);
+
+            if (!hadVibrate && distanceToTarget > Vector3.Distance(cardTran.position, target.cardTran.position))
+            {
+                hadVibrate = true;
+                onHitTarget?.Invoke();
+                target.Vibrate();
+            }
+
+            distanceToTarget = Vector3.Distance(cardTran.position, target.cardTran.position);
             await new WaitForUpdate();
         }
 
+        render.sortingOrder = normalsortingOrder;
         cardTran.position = startPosition;
         curStatus = status.inSlot;
     }
 
-    /*
-    public void ChangePosition(Vector3 position, int sortingOrder, float moveSpeed)
+    //whne under attack
+    public async void Vibrate()
     {
-        targetPos = position;
-        this.normalSortingOrder = sortingOrder;
-        moveToTargetSpeed = moveSpeed;
+        float timeCouter = 0.2f;
+        Vector2 startPosition = cardTran.position;
+        float frequency = 0.01f;
+
+        while (timeCouter > 0)
+        {
+            timeCouter -= frequency;
+            await new WaitForSeconds(frequency);
+            cardTran.position = startPosition + UnityEngine.Random.insideUnitCircle*0.1f;
+            await new WaitForUpdate();
+        }
+
+        cardTran.position = startPosition;
     }
-    */
 }

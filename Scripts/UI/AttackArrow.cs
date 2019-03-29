@@ -73,10 +73,4 @@ public class AttackArrow : MonoBehaviour {
         Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
         arrow.rotation = q;
     }
-
-    // Update is called once per frame
-    private void Update()
-    {   
-        UpdateArrow();
-    }
 }

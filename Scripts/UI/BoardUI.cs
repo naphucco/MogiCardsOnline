@@ -25,10 +25,10 @@ public class BoardUI : MonoBehaviour {
     public SlotUI[] controllerSlotUIs = new SlotUI[5];
     public SlotUI[] opponentSlotUIs = new SlotUI[5];
 
-    public List<CardMotion> MogiInBoard(bool isController)
+    public List<MogiEntity> MogiInBoard(bool isController)
     {
         SlotUI[] slots = null;
-        List<CardMotion> cardMogis = new List<CardMotion>();
+        List<MogiEntity> cardMogis = new List<MogiEntity>();
 
         if (isController)
         {
@@ -41,15 +41,15 @@ public class BoardUI : MonoBehaviour {
 
         for (int i = 0; i < slots.Length; i++)
         {
-            if (slots[i].cardMotion != null)
+            if (slots[i].cardEntity != null)
             {
-                if (CardData.Instance.GetCard(slots[i].cardMotion.name, false).type == Card.Type.mogi)
+                if (CardData.Instance.GetCard(slots[i].cardEntity.name, false).type == Card.Type.mogi)
                 {
-                    cardMogis.Add(slots[i].cardMotion);
+                    cardMogis.Add((MogiEntity)slots[i].cardEntity);
                 }
             }
         }
-
+        
         return cardMogis;
     }
 
@@ -68,7 +68,7 @@ public class BoardUI : MonoBehaviour {
 
         for (int i = 0; i < slots.Length; i++)
         {
-            if (slots[i].cardMotion == null)
+            if (slots[i].cardEntity == null)
             {
                 return true;
             }
@@ -92,7 +92,7 @@ public class BoardUI : MonoBehaviour {
 
         for (int i = 0; i < slots.Length; i++)
         {
-            if (slots[i].cardMotion == null)
+            if (slots[i].cardEntity == null)
             {
                 return slots[i];
             }
@@ -101,7 +101,7 @@ public class BoardUI : MonoBehaviour {
         return null;
     }
 
-    public bool InsertToSlot(CardMotion card, bool toController)
+    public bool InsertToSlot(CardEntity card, bool toController)
     {
         SlotUI[] slots = null;
 
@@ -118,7 +118,7 @@ public class BoardUI : MonoBehaviour {
         {
             for (int i = 0; i < slots.Length; i++)
             {
-                if (slots[i].cardMotion == null)
+                if (slots[i].cardEntity == null)
                 {
                     slots[i].InsertToSlot(card);
                     return true;
@@ -129,7 +129,7 @@ public class BoardUI : MonoBehaviour {
         return false;
     }
 
-    public void PutOnTopMogi(CardMotion moveCard, CardMotion mogiCard, bool toController)
+    public void PutOnTopMogi(MogiEntity moveCard, MogiEntity mogiCard, bool toController)
     {
         SlotUI[] slots = null;
 
@@ -144,7 +144,7 @@ public class BoardUI : MonoBehaviour {
 
         for (int i = 0; i < slots.Length; i++)
         {
-            if (slots[i].cardMotion == mogiCard)
+            if (slots[i].cardEntity == mogiCard)
             {
                 slots[i].PutOnTopOfMogi(moveCard, mogiCard);
             }

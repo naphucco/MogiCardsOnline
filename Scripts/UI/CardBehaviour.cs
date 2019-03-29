@@ -2,48 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ControllerBehaviour : MonoBehaviour
+public class CardBehaviour : MonoBehaviour
 {
     //Use 1 unique instance
-    private static ControllerBehaviour instance = null;
+    private static CardBehaviour instance = null;
 
-    public static ControllerBehaviour Instance
+    public static CardBehaviour Instance
     {
         get
         {
             if (instance == null)
             {
-                instance = GameObject.FindObjectOfType<ControllerBehaviour>();
+                instance = GameObject.FindObjectOfType<CardBehaviour>();
             }
             return instance;
         }
     }
 
-    public List<CardMotion> cardMotions = new List<CardMotion>();
+    public List<CardEntity> cardMotions = new List<CardEntity>();
 
-    private CardMotion selectingCard;
+    private CardEntity selectingCard;
 
-    public void AddNewCard(CardMotion card)
+    public void AddNewCard(CardEntity card)
     {
         cardMotions.Add(card);
+        if(card.motion.isController) card.motion.AddDeselectCardEvent(ControllerBehaviour.Instance.OnDeselectCard);
     }
-
-    public List<CardMotion> CardMotions(bool isController)
-    {
-        List<CardMotion> cardMotions = new List<CardMotion>();
-
-        for (int i = 0; i < this.cardMotions.Count; i++)
-        {
-            if (this.cardMotions[i].isController == isController)
-            {
-                cardMotions.Add(this.cardMotions[i]);
-            }
-        }
-
-        return cardMotions;
-    }
-
-    public void RemoveCard(CardMotion card)
+    
+    public void RemoveCard(CardEntity card)
     {
         cardMotions.Remove(card);
     }
@@ -75,10 +61,10 @@ public class ControllerBehaviour : MonoBehaviour
                             {
                                 if (selectingCard == null)
                                 {
-                                    if (HandUI.Instance.cardInControllerHand[i].render.bounds.Contains(choosePos))
+                                    if (HandUI.Instance.cardInControllerHand[i].motion.render.bounds.Contains(choosePos))
                                     {
                                         selectingCard = HandUI.Instance.cardInControllerHand[i];
-                                        selectingCard.Selecting();
+                                        selectingCard.motion.Selecting();
                                         break;
                                     }
                                 }
@@ -88,14 +74,14 @@ public class ControllerBehaviour : MonoBehaviour
                             {
                                 if (selectingCard == null)
                                 {                                    
-                                    if (BoardUI.Instance.controllerSlotUIs[i].cardMotion != null)
+                                    if (BoardUI.Instance.controllerSlotUIs[i].cardEntity != null)
                                     {
-                                        CardMotion card = BoardUI.Instance.controllerSlotUIs[i].cardMotion;
+                                        CardEntity card = BoardUI.Instance.controllerSlotUIs[i].cardEntity;
 
-                                        if (card.render.bounds.Contains(choosePos))
+                                        if (card.motion.render.bounds.Contains(choosePos))
                                         {
-                                            selectingCard = BoardUI.Instance.controllerSlotUIs[i].cardMotion;
-                                            selectingCard.Selecting();
+                                            selectingCard = BoardUI.Instance.controllerSlotUIs[i].cardEntity;
+                                            selectingCard.motion.Selecting();
                                             break;
                                         }
                                     }
@@ -105,7 +91,7 @@ public class ControllerBehaviour : MonoBehaviour
                     }
                     else
                     {
-                        selectingCard.Selecting();
+                        selectingCard.motion.Selecting();
                     }
                 }
                 else
@@ -118,7 +104,7 @@ public class ControllerBehaviour : MonoBehaviour
             {
                 if (cardMotions[i] != selectingCard)
                 {
-                    cardMotions[i].DeSelecting();
+                    cardMotions[i].motion.DeSelecting();
                 }
             }
         }

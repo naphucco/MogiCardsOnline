@@ -76,11 +76,16 @@ public class PileUI : MonoBehaviour {
                 else //random
                 {
                     int drawMogi = 0;
-
+                                        
                     if (numberInQueue == 1)
+                    {
                         drawMogi = UnityEngine.Random.Range(0, 2);
+                        
+                    }
                     else
+                    {
                         drawMogi = Mathf.CeilToInt(numberInQueue / 2f);//50% is mogi
+                    }
 
                     cardToDraws = Game.Instance.controller.activity.GetMogiCard(drawMogi, getByTurn);
                     int drawBonus = numberInQueue - cardToDraws.Count;
@@ -102,9 +107,20 @@ public class PileUI : MonoBehaviour {
                     int drawMogi = 0;
 
                     if (numberInQueue == 1)
-                        drawMogi = UnityEngine.Random.Range(0, 2);
+                    {
+                        if (HandUI.Instance.MogisInHand(false).Count == 0 && BoardUI.Instance.MogiInBoard(false).Count == 0)
+                        {
+                            drawMogi = 1;
+                        }
+                        else
+                        {
+                            drawMogi = UnityEngine.Random.Range(0, 2);
+                        }
+                    }
                     else
+                    {
                         drawMogi = Mathf.CeilToInt(numberInQueue / 2f);//50% is mogi
+                    }
 
                     cardToDraws = Game.Instance.opponent.activity.GetMogiCard(drawMogi, getByTurn);
                     int drawBonus = numberInQueue - cardToDraws.Count;
@@ -151,15 +167,17 @@ public class PileUI : MonoBehaviour {
         }
         
         GameObject cardObj = Instantiate(prefab, pos, Quaternion.identity);
-
+        
+        CardEntity entity = cardObj.GetComponent<CardEntity>();
+        
         CardDisplay display = cardObj.GetComponent<CardDisplay>();
         display.Init(cardName);
-        cardObj.name = cardName;
-
-        CardMotion motion = cardObj.GetComponent<CardMotion>();
-        motion.Init(this, info, byController);
+        cardObj.name = cardName;        
+        CardMotion motion = cardObj.GetComponent<CardMotion>();        
+        motion.Init(entity, byController);
+        entity.Init(info, display, motion);
+        
         motion.PileToHand(conpleteEffect);
-
-        if (type == Card.Type.mogi) cardObj.GetComponent<MogiEntity>().Init((MogiCard)info);
+        
     }
 }

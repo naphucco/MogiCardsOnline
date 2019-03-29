@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 114662507583630614}
   - component: {fileID: 114721733333538892}
   - component: {fileID: 114719134023789606}
+  - component: {fileID: 114712939615112538}
   m_Layer: 0
   m_Name: BonusCardPrefab
   m_TagString: Untagged
@@ -54,6 +55,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95f456b039c0dba4db88f524577ee8a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animation:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &114712939615112538
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1300509046102378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fe0e105090aa6a4fbeccb63e644d942, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114719134023789606
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -80,6 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2822282a6583c5443898e220c50cde63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  render: {fileID: 0}
 --- !u!212 &212940130891452148
 SpriteRenderer:
   m_ObjectHideFlags: 1

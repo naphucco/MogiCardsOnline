@@ -18,8 +18,8 @@ public class HandUI : MonoBehaviour {
         }
     }
     
-    public List<CardMotion> cardInControllerHand;
-    public List<CardMotion> cardInOpponentHand;
+    public List<CardEntity> cardInControllerHand;
+    public List<CardEntity> cardInOpponentHand;
 
     //hand position
     public Vector3 controllerHandPos;
@@ -30,12 +30,31 @@ public class HandUI : MonoBehaviour {
 
     private void Init()
     {
-        cardInControllerHand = new List<CardMotion>();
+        cardInControllerHand = new List<CardEntity>();
     }
 
-    public void InsertCard(CardMotion card,bool toController)
+    public List<CardEntity> MogisInHand(bool isController)
     {
-        List<CardMotion> cardInHand = null;
+        List<CardEntity> cardInHand = null;
+        if (isController) cardInHand = cardInControllerHand;
+        else cardInHand = cardInOpponentHand;
+
+        List<CardEntity> mogisInhand = new List<CardEntity>();
+
+        for (int i = 0; i < cardInHand.Count; i++)
+        {
+            if (cardInHand[i].info.type == Card.Type.mogi)
+            {
+                mogisInhand.Add(cardInHand[i]);
+            }
+        }
+
+        return mogisInhand;
+    }
+
+    public void InsertCard(CardEntity card,bool toController)
+    {
+        List <CardEntity> cardInHand = null;
         if (toController) cardInHand = cardInControllerHand;
         else cardInHand = cardInOpponentHand;
         cardInHand.Add(card);
@@ -45,15 +64,16 @@ public class HandUI : MonoBehaviour {
             //chaneg pos of aready card
             for (int i = 0; i < cardInHand.Count; i++)
             {
-                CardMotion oldCard = cardInHand[i];                
-                cardInHand[i].MoveToPosition(GetCardPosition(oldCard, toController), 1 + i * 2, false, 4);
+                CardEntity oldCard = cardInHand[i];
+                Debug.Log(cardInHand[i].motion);
+                cardInHand[i].motion.MoveToPosition(GetCardPosition(oldCard, toController), 1 + i * 2, false, 4);
             }
         }
     }
 
-    public void RemoveCard(CardMotion card, bool isController)
+    public void RemoveCard(CardEntity card, bool isController)
     {
-        List<CardMotion> cardInHand = null;
+        List<CardEntity> cardInHand = null;
         if (isController) cardInHand = cardInControllerHand;
         else cardInHand = cardInOpponentHand;
 
@@ -62,14 +82,14 @@ public class HandUI : MonoBehaviour {
         //chaneg pos of when had remove
         for (int i = 0; i < cardInHand.Count; i++)
         {
-            CardMotion cardRemain = cardInHand[i];
-            cardInHand[i].MoveToPosition(GetCardPosition(cardRemain, isController), 1 + i * 2, false, 4);
+            CardEntity cardRemain = cardInHand[i];
+            cardInHand[i].motion.MoveToPosition(GetCardPosition(cardRemain, isController), 1 + i * 2, false, 4);
         }
     }
 
-    public Vector3 GetCardPosition(CardMotion card, bool isController)
+    public Vector3 GetCardPosition(CardEntity card, bool isController)
     {
-        List<CardMotion> cardInHand = null;
+        List<CardEntity> cardInHand = null;
         if (isController) cardInHand = cardInControllerHand;
         else cardInHand = cardInOpponentHand;
 

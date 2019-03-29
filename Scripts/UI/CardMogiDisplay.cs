@@ -8,7 +8,8 @@ public class CardMogiDisplay : CardDisplay
     public SpriteRenderer animationRender;
     public SpriteRenderer bgRender;
     public Sprite frontBG;
-    
+    public GameObject targetedEffect;
+
     private Sprite[] sprite;
     private bool hadShowFront = false;
 
@@ -16,6 +17,16 @@ public class CardMogiDisplay : CardDisplay
     {
         base.Init(cardName);
         sprite = CardData.Instance.GetMogi(cardName, false).display;
+    }
+
+    public void Targeted()
+    {
+        targetedEffect.SetActive(true);
+    }
+
+    public void StopTargeted()
+    {
+        targetedEffect.SetActive(false);
     }
 
     public override void ShowFrontOfCard()

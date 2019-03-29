@@ -173,7 +173,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &236458864
 GameObject:
@@ -818,7 +818,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 18
+  m_fontSize: 45.4
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -836,7 +836,7 @@ MonoBehaviour:
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
-  m_firstOverflowCharacterIndex: 0
+  m_firstOverflowCharacterIndex: -1
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
   m_isTextTruncated: 0
@@ -1163,7 +1163,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &846933484
 MonoBehaviour:
@@ -1222,7 +1222,7 @@ Transform:
   - {fileID: 1750049080}
   - {fileID: 1693798756}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1038560412
 GameObject:
@@ -1364,7 +1364,7 @@ Transform:
   - {fileID: 1417304390}
   - {fileID: 1238052910}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1190754876
 GameObject:
@@ -1431,7 +1431,7 @@ RectTransform:
   m_Children:
   - {fileID: 557587279}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2078,7 +2078,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4327491007465836, guid: 9b3132f6c17e1074ab3d1e02b3cdbe8f, type: 2}
       propertyPath: m_RootOrder
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1590784695954484, guid: 9b3132f6c17e1074ab3d1e02b3cdbe8f, type: 2}
       propertyPath: m_Name
@@ -2439,6 +2439,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   effectsPrefab:
   - {fileID: 1357290824296162, guid: ea7176a997cdeda4293bedb11c3d79e3, type: 2}
+--- !u!114 &1951226489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1951226487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cbe427f635cc484e987267d6c5d926b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1951226494
 MonoBehaviour:
   m_ObjectHideFlags: 0

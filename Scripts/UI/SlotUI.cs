@@ -6,17 +6,17 @@ using System;
 [Serializable]
 public class SlotUI
 {
-    public CardMotion cardMotion;
+    public CardEntity cardEntity;
     public Transform slotTransform;
 
-    public void InsertToSlot(CardMotion card)
+    public void InsertToSlot(CardEntity card)
     {
-        cardMotion = card;
-        card.MoveToPosition(slotTransform.position, 2, false, 20);
+        cardEntity = card;
+        card.motion.MoveToPosition(slotTransform.position, 2, false, 20);
     }
-    public void PutOnTopOfMogi(CardMotion card, CardMotion mogi)
+    public void PutOnTopOfMogi(MogiEntity card, MogiEntity mogi)
     {
-        card.MoveToPosition(mogi.cardTran.position, 1000, true, 20, async () =>
+        card.motion.MoveToPosition(mogi.motion.cardTran.position, 1000, true, 20, async () =>
         {
             await new WaitForSeconds(0.5f);
 
