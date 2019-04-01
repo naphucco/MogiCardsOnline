@@ -37,7 +37,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4473021805320012}
   - component: {fileID: 212940130891452148}
-  - component: {fileID: 114662507583630614}
+  - component: {fileID: 114843756580463028}
   - component: {fileID: 114884862276694498}
   - component: {fileID: 114330371691587628}
   m_Layer: 0
@@ -152,7 +152,7 @@ MonoBehaviour:
   timeBetweenFrame: 0.04
   startRandomKey: 0
   oneShoot: 0
---- !u!114 &114662507583630614
+--- !u!114 &114843756580463028
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -160,7 +160,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1300509046102378}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95f456b039c0dba4db88f524577ee8a1, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d66e2623f015f3469909fa6bdbe622e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animation:
@@ -225,7 +225,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3fd7f4a4d75c4f46b5c980285a751f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  render: {fileID: 0}
   animation: {fileID: 114613637358250206}
   animationRender: {fileID: 212617367733467340}
   bgRender: {fileID: 212940130891452148}

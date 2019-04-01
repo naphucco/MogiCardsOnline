@@ -109,8 +109,9 @@ public class ControllerBehaviour : MonoBehaviour {
 
                 if (mogiList[i].motion.render.bounds.Contains(cardPos))
                 {
-                    card.motion.MoveToTopOfMogi(mogiCard);
-                    card.motion.Dissolving();
+                    CardBonusMotion cardBonus = (CardBonusMotion)card.motion;
+                    cardBonus.MoveToTopOfMogi(mogiCard);
+                    cardBonus.Dissolving();
                 }
             }
         }
@@ -134,9 +135,10 @@ public class ControllerBehaviour : MonoBehaviour {
                 {
                     //attack target
                     //Debug.Log("attack : " + opponentMogis[i].name);
-                    card.motion.MogiAttackAnimation(opponentMogis[i].motion,() => 
+                    ((CardMogiMotion)card.motion)
+                        .MogiAttackAnimation((CardMogiMotion)opponentMogis[i].motion,() => 
                     {
-                        card.GetComponent<MogiEntity>().Fight(opponentMogis[i].GetComponent<MogiEntity>());
+                        ((MogiEntity)card).Fight(opponentMogis[i].GetComponent<MogiEntity>());
                     });
 
                     break;

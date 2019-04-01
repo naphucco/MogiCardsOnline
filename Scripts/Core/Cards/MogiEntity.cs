@@ -13,7 +13,7 @@ public class MogiEntity : CardEntity
     public int maxHP;
     public int attackPoint;
 
-    private Action onDead;
+    private Action onDead, onTakeDamage;
 
     public void Fight(MogiEntity target)
     {
@@ -24,7 +24,13 @@ public class MogiEntity : CardEntity
     public void TakeDamage(int attackPoint)
     {
         HPRemain -= attackPoint;
+        onTakeDamage?.Invoke();
         if (HPRemain <= 0) onDead?.Invoke();
+    }
+
+    public void AddTakeDamageEvent(Action takeDamageEvent)
+    {
+        this.onTakeDamage += takeDamageEvent;
     }
 
     public void AddDeadEvent(Action deadEvent)

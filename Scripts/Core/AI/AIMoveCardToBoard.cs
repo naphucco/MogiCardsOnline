@@ -87,7 +87,7 @@ public class AIMoveCardToBoard : StateMachineBehaviour {
             }
             else
             {
-                card.HandToOpponentTopMogi(mogiInBoards[Random.Range(0, mogiInBoards.Count)], () =>
+                ((CardBonusMotion)card).HandToOpponentTopMogi(mogiInBoards[Random.Range(0, mogiInBoards.Count)], () =>
                 {
                     //repeat
                     animator.SetInteger("action", 2);

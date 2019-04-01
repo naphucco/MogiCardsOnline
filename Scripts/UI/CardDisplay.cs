@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class CardDisplay : MonoBehaviour {
 
-    public SpriteRenderer render;
+    //public SpriteRenderer render;
 
     public virtual void Init(string cardName)
     {
-        render = GetComponent<SpriteRenderer>();
+        //render = GetComponent<SpriteRenderer>();
     }
 
     public virtual void ShowFrontOfCard()

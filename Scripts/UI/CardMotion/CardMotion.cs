@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class CardMotion : MonoBehaviour
 {
-    public new AnimationCurve animation;
-
     public SpriteRenderer render { get; private set; }
     public Transform cardTran { get; private set; }
     public bool isController { get; private set; }
@@ -12,13 +10,14 @@ public class CardMotion : MonoBehaviour
     public status curStatus { get; set; }
 
     public enum status { none, inHand, inSlot, attacking }
-    
-    private CardDisplay cardUI;
+        
     private bool showingDetail;
-    private Vector3 normalPos;
-    private int normalsortingOrder;
+    private Vector3 normalPos;    
     private Action<CardEntity> onDeslect, onSelecting, onSelect;
-    private CardEntity entity;
+
+    protected CardDisplay cardUI;
+    protected int normalsortingOrder;
+    protected CardEntity entity;
 
     public virtual void Init(CardEntity entity, bool isController)
     {
@@ -59,59 +58,6 @@ public class CardMotion : MonoBehaviour
              complete?.Invoke();
          });
     }
-
-    public async void HandToOpponentTopMogi(MogiEntity mogi, Action complete)
-    {
-        MotionManager.AddMotion();
-        render.sortingOrder = 1000;
-        bool moveComplete = false;
-
-        MoveToPosition(new Vector3(0, 0, -5), 1000, true, 20, () =>
-         {
-             moveComplete = true;
-         });
-
-        await new WaitUntil(() => moveComplete);
-        await new WaitForSeconds(0.2f);
-
-        Quaternion midle = Quaternion.Euler(0, -90, 0);
-
-        //rotation
-        float timeCouter = 0;
-        while (timeCouter < 1)
-        {
-            timeCouter += Time.deltaTime * 10f;
-            cardTran.rotation = Quaternion.Lerp(Quaternion.identity, midle, timeCouter);
-            await new WaitForUpdate();
-        }
-
-        cardUI.ShowFrontOfCard();
-        render.flipX = true;
-        Quaternion last = Quaternion.Euler(0, -180, 0);
-        timeCouter = 0;
-
-        while (timeCouter < 1)
-        {
-            timeCouter += Time.deltaTime * 10f;
-            cardTran.rotation = Quaternion.Lerp(midle, last, timeCouter);
-            await new WaitForUpdate();
-        }
-
-        render.flipX = false;
-        cardTran.rotation = Quaternion.identity;
-        cardUI.RotationComplete();
-
-        await new WaitForSeconds(0.2f);
-
-        MotionManager.RunComplete();
-
-        MoveToTopOfMogi(mogi);
-        Dissolving(() => {
-            AIBehaviour.Instance.inAction = false;
-            complete.Invoke();
-        });
-    }
-
 
     public async void HandToOpponentSlot(SlotUI slot, Action complete)
     {
@@ -290,74 +236,8 @@ public class CardMotion : MonoBehaviour
         normalsortingOrder = sortingOrder;
         if (!sortingOrderFirst) render.sortingOrder = sortingOrder;
         onComplete?.Invoke();
-    }
-
-    public void MoveToTopOfMogi(CardEntity mogi)
-    {
-        HandUI.Instance.RemoveCard(entity, isController);
-        BoardUI.Instance.PutOnTopMogi(entity, (MogiEntity)mogi, isController);
-    }
-
-    public async void Dissolving(Action complete = null)
-    {
-        await new WaitForSeconds(1f);
-        CardBehaviour.Instance.RemoveCard(entity);
-        complete?.Invoke();
-        EffectManager.Instance.Instantiate("Bonus_is_used", cardTran.position);
-        Destroy(gameObject);
-    }
+    }    
     
-    public async void MogiAttackAnimation(CardMotion target,Action onHitTarget)
-    {
-        curStatus = status.attacking;
-        render.sortingOrder = 1000;
-        Vector3 startPosition = transform.position;
-
-        float timeCouter = 0;
-        float distanceToTarget = 0;
-        bool hadVibrate = false;
-
-        while (timeCouter < 1)
-        {
-            timeCouter += Time.deltaTime * 2;
-            if (timeCouter > 1) timeCouter = 1;
-            float lerp = animation.Evaluate(timeCouter);            
-            cardTran.position = Vector3.Lerp(startPosition, target.cardTran.position, lerp);
-
-            if (!hadVibrate && distanceToTarget > Vector3.Distance(cardTran.position, target.cardTran.position))
-            {
-                hadVibrate = true;
-                onHitTarget?.Invoke();
-                target.Vibrate();
-            }
-
-            distanceToTarget = Vector3.Distance(cardTran.position, target.cardTran.position);
-            await new WaitForUpdate();
-        }
-
-        render.sortingOrder = normalsortingOrder;
-        cardTran.position = startPosition;
-        curStatus = status.inSlot;
-    }
-
-    //whne under attack
-    public async void Vibrate()
-    {
-        float timeCouter = 0.16f;
-        Vector2 startPosition = cardTran.position;
-        float frequency = 0.01f;
-
-        while (timeCouter > 0)
-        {
-            timeCouter -= frequency;
-            await new WaitForSeconds(frequency);
-            cardTran.position = startPosition + UnityEngine.Random.insideUnitCircle*0.1f;
-            await new WaitForUpdate();
-        }
-
-        cardTran.position = startPosition;
-    }
-
     private void MogiDeadEffect()
     {
         
