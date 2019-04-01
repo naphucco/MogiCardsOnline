@@ -18,10 +18,62 @@ public class ControllerBehaviour : MonoBehaviour {
         }
     }
 
-    public void OnDeselectCard(CardEntity motion)
+    public void OnSelectCard(CardEntity card)
     {
-        CheckMoveToControllerBoard(motion); //move to board
-        CheckMogiControllerAttack(motion); //mogi attack
+        if (card.motion.curStatus == CardMotion.status.inSlot)
+        {
+            if (card.info.type == Card.Type.mogi)
+            {
+                List<MogiEntity> opponentMogis = BoardUI.Instance.MogiInBoard(false);
+
+                for (int i = 0; i < opponentMogis.Count; i++)
+                {
+                    ((CardMogiDisplay)opponentMogis[i].display).Targeted();
+                }
+            }
+        }
+    }
+
+    public void OnSelectingCard(CardEntity card)
+    {
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = -Camera.main.transform.position.z; // select distance = 10 units from the camera
+        Vector3 choosePos = Camera.main.ScreenToWorldPoint(mousePos);
+        choosePos.z = 0;
+
+        if (card.motion.curStatus == CardMotion.status.inHand)
+        {
+            //front of all               
+            card.motion.render.sortingOrder = 1000;
+            card.motion.cardTran.position = choosePos;
+        }
+        else if (card.motion.curStatus == CardMotion.status.inSlot)
+        {
+            if (card.info.type == Card.Type.mogi)
+            {
+                List<MogiEntity> opponentMogis = BoardUI.Instance.MogiInBoard(false);
+
+                for (int i = 0; i < opponentMogis.Count; i++)
+                {
+                    ((CardMogiDisplay)opponentMogis[i].display).Targeted();
+                }
+                
+                AttackArrow.Instance.Display(card.motion.cardTran.position, choosePos);
+            }
+        }
+    }
+
+    public void OnDeselectCard(CardEntity card)
+    {
+        List<MogiEntity> opponentMogis = BoardUI.Instance.MogiInBoard(false);
+
+        for (int i = 0; i < opponentMogis.Count; i++)
+        {
+            ((CardMogiDisplay)opponentMogis[i].display).StopTargeted();
+        }
+
+        CheckMoveToControllerBoard(card); //move to board
+        CheckMogiControllerAttack(card); //mogi attack
     }
 
     private void CheckMoveToControllerBoard(CardEntity card)

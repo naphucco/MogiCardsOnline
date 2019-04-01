@@ -14,7 +14,7 @@ public class SlotUI
         cardEntity = card;
         card.motion.MoveToPosition(slotTransform.position, 2, false, 20);
     }
-    public void PutOnTopOfMogi(MogiEntity card, MogiEntity mogi)
+    public void PutOnTopOfMogi(CardEntity card, MogiEntity mogi)
     {
         card.motion.MoveToPosition(mogi.motion.cardTran.position, 1000, true, 20, async () =>
         {

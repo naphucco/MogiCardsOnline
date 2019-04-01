@@ -416,26 +416,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   putDownCardArea: {fileID: 387197465}
   controllerSlotUIs:
-  - cardMotion: {fileID: 0}
+  - cardEntity: {fileID: 0}
     slotTransform: {fileID: 802210533}
-  - cardMotion: {fileID: 0}
+  - cardEntity: {fileID: 0}
     slotTransform: {fileID: 471320228}
-  - cardMotion: {fileID: 0}
+  - cardEntity: {fileID: 0}
     slotTransform: {fileID: 236458865}
-  - cardMotion: {fileID: 0}
+  - cardEntity: {fileID: 0}
     slotTransform: {fileID: 573724576}
-  - cardMotion: {fileID: 0}
+  - cardEntity: {fileID: 0}
     slotTransform: {fileID: 507612043}
   opponentSlotUIs:
-  - cardMotion: {fileID: 0}
+  - cardEntity: {fileID: 0}
     slotTransform: {fileID: 357381453}
-  - cardMotion: {fileID: 0}
+  - cardEntity: {fileID: 0}
     slotTransform: {fileID: 1401813070}
-  - cardMotion: {fileID: 0}
+  - cardEntity: {fileID: 0}
     slotTransform: {fileID: 1725785668}
-  - cardMotion: {fileID: 0}
+  - cardEntity: {fileID: 0}
     slotTransform: {fileID: 1038560413}
-  - cardMotion: {fileID: 0}
+  - cardEntity: {fileID: 0}
     slotTransform: {fileID: 1575813391}
 --- !u!1 &471320227
 GameObject:
@@ -818,7 +818,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 45.4
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -836,7 +836,7 @@ MonoBehaviour:
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
-  m_firstOverflowCharacterIndex: -1
+  m_firstOverflowCharacterIndex: 0
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
   m_isTextTruncated: 0

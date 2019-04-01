@@ -26,7 +26,13 @@ public class CardBehaviour : MonoBehaviour
     public void AddNewCard(CardEntity card)
     {
         cardMotions.Add(card);
-        if(card.motion.isController) card.motion.AddDeselectCardEvent(ControllerBehaviour.Instance.OnDeselectCard);
+
+        if (card.motion.isController)
+        {
+            card.motion.AddDeselectCardEvent(ControllerBehaviour.Instance.OnDeselectCard);
+            card.motion.AddSelectingCardEvent(ControllerBehaviour.Instance.OnSelectingCard);
+            card.motion.AddSelectCardEvent(ControllerBehaviour.Instance.OnSelectCard);
+        }
     }
     
     public void RemoveCard(CardEntity card)

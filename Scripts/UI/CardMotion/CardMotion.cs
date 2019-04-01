@@ -9,21 +9,21 @@ public class CardMotion : MonoBehaviour
     public Transform cardTran { get; private set; }
     public bool isController { get; private set; }
     public bool moving { get; private set; }
+    public status curStatus { get; set; }
 
     public enum status { none, inHand, inSlot, attacking }
-
-    private status curStatus;
+    
     private CardDisplay cardUI;
     private bool showingDetail;
     private Vector3 normalPos;
-    private int normalsortingOrder;    
-    private Action<CardEntity> onDeslect;
+    private int normalsortingOrder;
+    private Action<CardEntity> onDeslect, onSelecting, onSelect;
     private CardEntity entity;
 
-    public void Init(CardEntity entity, bool isController)
+    public virtual void Init(CardEntity entity, bool isController)
     {
-        cardTran = transform;        
-        curStatus = status.none;        
+        cardTran = transform;
+        curStatus = status.none;
         normalPos = cardTran.position;
         this.entity = entity;
         this.isController = isController;
@@ -44,11 +44,13 @@ public class CardMotion : MonoBehaviour
     }
 
     private void PileToOpponentHand(Action complete)
-    {        
+    {
         MotionManager.AddMotion();
         HandUI.Instance.InsertCard(entity, isController);
         curStatus = status.inHand;
         CardBehaviour.Instance.AddNewCard(entity);
+
+        render.sortingOrder = 1000;
 
         MoveToPosition(HandUI.Instance.GetCardPosition(entity, isController),
             HandUI.Instance.cardInOpponentHand.Count * 2, false, 10, () =>
@@ -156,7 +158,7 @@ public class CardMotion : MonoBehaviour
         MoveToPosition(slot.slotTransform.position, 1, false, 10, () =>
         {
             //move to hand
-            MotionManager.RunComplete();            
+            MotionManager.RunComplete();
             MoveToSlot();
             complete.Invoke();
         });
@@ -218,7 +220,7 @@ public class CardMotion : MonoBehaviour
         curStatus = status.inHand;
 
         CardBehaviour.Instance.AddNewCard(entity);
-        
+
         MoveToPosition(HandUI.Instance.GetCardPosition(entity, isController),
             HandUI.Instance.cardInControllerHand.Count * 2, false, 20, () =>
             {
@@ -229,33 +231,26 @@ public class CardMotion : MonoBehaviour
 
     private bool isSelecting;
 
+    public void AddSelectingCardEvent(Action<CardEntity> cardEvent)
+    {
+        onSelecting += cardEvent;
+    }
+    
+    public void AddSelectCardEvent(Action<CardEntity> cardEvent)
+    {
+        onSelect += cardEvent;
+    }
+
     //run when selecting
     public void Selecting()
     {
-        isSelecting = true;
-
-        if (isController)
+        if (!isSelecting)
         {
-            Vector3 mousePos = Input.mousePosition;
-            mousePos.z = -Camera.main.transform.position.z; // select distance = 10 units from the camera
-            Vector3 choosePos = Camera.main.ScreenToWorldPoint(mousePos);
-            choosePos.z = 0;
-
-            if (this.curStatus == status.inHand)
-            {
-                //front of all               
-                render.sortingOrder = 1000;
-                cardTran.position = choosePos;
-            }
-            else if (this.curStatus == status.inSlot)
-            {
-                if (entity.info.type == Card.Type.mogi)
-                {
-                    //BoardUI.Instance.
-                    AttackArrow.Instance.Display(cardTran.position, choosePos);
-                }
-            }
+            onSelect?.Invoke(entity);
+            isSelecting = true;
         }
+
+        onSelecting?.Invoke(entity);
     }
 
     public void AddDeselectCardEvent(Action<CardEntity> cardEvent)
@@ -300,7 +295,7 @@ public class CardMotion : MonoBehaviour
     public void MoveToTopOfMogi(CardEntity mogi)
     {
         HandUI.Instance.RemoveCard(entity, isController);
-        BoardUI.Instance.PutOnTopMogi((MogiEntity)entity, (MogiEntity)mogi, isController);
+        BoardUI.Instance.PutOnTopMogi(entity, (MogiEntity)mogi, isController);
     }
 
     public async void Dissolving(Action complete = null)
@@ -348,7 +343,7 @@ public class CardMotion : MonoBehaviour
     //whne under attack
     public async void Vibrate()
     {
-        float timeCouter = 0.2f;
+        float timeCouter = 0.16f;
         Vector2 startPosition = cardTran.position;
         float frequency = 0.01f;
 
@@ -361,5 +356,10 @@ public class CardMotion : MonoBehaviour
         }
 
         cardTran.position = startPosition;
+    }
+
+    private void MogiDeadEffect()
+    {
+        
     }
 }

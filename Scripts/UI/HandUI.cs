@@ -65,7 +65,6 @@ public class HandUI : MonoBehaviour {
             for (int i = 0; i < cardInHand.Count; i++)
             {
                 CardEntity oldCard = cardInHand[i];
-                Debug.Log(cardInHand[i].motion);
                 cardInHand[i].motion.MoveToPosition(GetCardPosition(oldCard, toController), 1 + i * 2, false, 4);
             }
         }

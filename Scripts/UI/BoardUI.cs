@@ -114,22 +114,19 @@ public class BoardUI : MonoBehaviour {
             slots = opponentSlotUIs;
         }
 
-        if (Game.Instance.controller.activity.PutOnBoard(card.name))
+        for (int i = 0; i < slots.Length; i++)
         {
-            for (int i = 0; i < slots.Length; i++)
+            if (slots[i].cardEntity == null)
             {
-                if (slots[i].cardEntity == null)
-                {
-                    slots[i].InsertToSlot(card);
-                    return true;
-                }
+                slots[i].InsertToSlot(card);
+                return true;
             }
         }
-
+        
         return false;
     }
 
-    public void PutOnTopMogi(MogiEntity moveCard, MogiEntity mogiCard, bool toController)
+    public void PutOnTopMogi(CardEntity moveCard, MogiEntity mogiCard, bool toController)
     {
         SlotUI[] slots = null;
 
