@@ -15,11 +15,13 @@ MonoBehaviour:
     description: 
   features: {fileID: 0}
   manaCost: 0
+  type: 0
+  putOn: 0
   display:
   - {fileID: 21300000, guid: 03e2924967776be46b6595568c207cec, type: 3}
   - {fileID: 21300002, guid: 03e2924967776be46b6595568c207cec, type: 3}
   - {fileID: 21300004, guid: 03e2924967776be46b6595568c207cec, type: 3}
   - {fileID: 21300006, guid: 03e2924967776be46b6595568c207cec, type: 3}
-  attackPoint: 1
+  attackPoint: 3
   level: 1
-  hp: 10
+  hp: 4

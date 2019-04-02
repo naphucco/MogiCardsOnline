@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class CardMogiMotion : CardMotion
 {
-    public new AnimationCurve animation;
+    public AnimationCurve ani;
 
     private bool attacking;
 
-    public override void Init(CardEntity entity, bool isController)
+    public override void Init(CardEntity entity)
     {
-        base.Init(entity, isController);
-        ((MogiEntity)entity).AddDeadEvent(MogiDeadEffect);
+        base.Init(entity);
+        entity.AddDiscardEvent(MogiDeadEffect);
         ((MogiEntity)entity).AddTakeDamageEvent(UnderAttackEffect);
     }
 
@@ -46,7 +46,7 @@ public class CardMogiMotion : CardMotion
         {
             timeCouter += Time.deltaTime * 4;
             if (timeCouter > 1) timeCouter = 1;
-            float lerp = animation.Evaluate(timeCouter);
+            float lerp = ani.Evaluate(timeCouter);
             cardTran.position = Vector3.Lerp(startPosition, targetPos, lerp);
 
             if (!hitTarget && distanceToTarget > Vector3.Distance(cardTran.position, targetPos))
@@ -68,8 +68,8 @@ public class CardMogiMotion : CardMotion
     //atacker not be effect
     public async void UnderAttackEffect()
     {
-        if (!isController && !TurnManager.Instance.isOpponentTurn
-            || isController && TurnManager.Instance.isOpponentTurn)
+        if (!entity.isController && !TurnManager.Instance.isOpponentTurn
+            || entity.isController && TurnManager.Instance.isOpponentTurn)
         {
             float timeCouter = 0.16f;
             Vector2 startPosition = cardTran.position;

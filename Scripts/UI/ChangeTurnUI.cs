@@ -1,58 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ChangeTurnUI : MonoBehaviour {
 
-    public int playerTurnAnimationID;
+    private Animator animator;
+    private Image img;
 
-    private Animator animator;    
+    public void EndAnimation()
+    {
+        animator.Play("ChangeTurnUI", -1, 0f);
+        animator.enabled = false;
+        img.enabled = false;
+    }
 
-    private void InitAnimation()
+    private void Init()
     {
         animator = GetComponent<Animator>();
+        img = GetComponent<Image>();
 
         TurnManager.Instance.AddSwitchTurnEvent((isOpponentTurn) =>
         {
-            if (isOpponentTurn)
-            {
-                animator.SetInteger("Display", 2);
-            }
-            else
-            {
-                animator.SetInteger("Display", 0);
-            }
+            animator.enabled = true;
+            img.enabled = true;
         });
     }
 
-    private void SwitchToOpponentTurn()
+    private void Awake()
     {
-        if (!TurnManager.Instance.isOpponentTurn)
-        {
-            TurnManager.Instance.SwitchTurn();
-        }
+        Init();
     }
-    
-    #region Unity
-
-    private void OnMouseUp()
-    {
-        SwitchToOpponentTurn();
-    }
-
-    private void OnMouseDown()
-    {
-        if (!TurnManager.Instance.isOpponentTurn)
-        {
-            animator.SetInteger("Display", 1);
-        }
-    }
-
-    private void Start()
-    {
-        InitAnimation();
-    }
-    
-
-    #endregion
 }

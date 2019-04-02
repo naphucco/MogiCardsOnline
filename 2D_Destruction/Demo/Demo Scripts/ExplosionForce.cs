@@ -40,14 +40,31 @@ public class ExplosionForce : MonoBehaviour {
 		yield return new WaitForFixedUpdate();
 		
 		Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position,radius);
-     
-		foreach(Collider2D coll in colliders){
+
+        foreach (Collider2D coll in colliders){
 			if(coll.GetComponent<Rigidbody2D>()&&coll.name!="hero"){
-                AddExplosionForce(coll.GetComponent<Rigidbody2D>(), force, transform.position, radius, upliftModifer);
-                Destroy(coll.gameObject, 1);
+                AddExplosionForce(coll.GetComponent<Rigidbody2D>(), force, transform.position, radius, upliftModifer);                
+                DestroyPiece(coll.gameObject);
 			}
 		}
 	}
+
+    private async void DestroyPiece(GameObject piece)
+    {
+        Material ma = piece.GetComponent<MeshRenderer>().material;
+        Color color = ma.color;
+
+        await new WaitForSeconds(0.5f);
+
+        while (color.a > 0)
+        {
+            color.a -= 0.7f * Time.deltaTime;
+            ma.color = color;
+            await new WaitForUpdate();
+        }
+
+        Destroy(piece);
+    }
 
     /// <summary>
     /// adds explosion force to given rigidbody

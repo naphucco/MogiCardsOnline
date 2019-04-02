@@ -163,7 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d66e2623f015f3469909fa6bdbe622e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animation:
+  ani:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -225,7 +225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3fd7f4a4d75c4f46b5c980285a751f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animation: {fileID: 114613637358250206}
+  ani: {fileID: 114613637358250206}
   animationRender: {fileID: 212617367733467340}
   bgRender: {fileID: 212940130891452148}
   frontBG: {fileID: 21300000, guid: c434f1c513557a94788cc43f6e8a6c12, type: 3}

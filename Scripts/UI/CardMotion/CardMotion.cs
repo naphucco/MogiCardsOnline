@@ -4,8 +4,7 @@ using UnityEngine;
 public class CardMotion : MonoBehaviour
 {
     public SpriteRenderer render { get; private set; }
-    public Transform cardTran { get; private set; }
-    public bool isController { get; private set; }
+    public Transform cardTran { get; private set; }    
     public bool moving { get; private set; }
     public status curStatus { get; set; }
 
@@ -19,20 +18,19 @@ public class CardMotion : MonoBehaviour
     protected int normalsortingOrder;
     protected CardEntity entity;
 
-    public virtual void Init(CardEntity entity, bool isController)
+    public virtual void Init(CardEntity entity)
     {
         cardTran = transform;
         curStatus = status.none;
         normalPos = cardTran.position;
         this.entity = entity;
-        this.isController = isController;
         render = GetComponent<SpriteRenderer>();
-        cardUI = GetComponent<CardDisplay>();
+        cardUI = GetComponent<CardDisplay>();        
     }
 
     public void PileToHand(Action complete)
     {
-        if (isController)
+        if (entity.isController)
         {
             PileToControllerHand(complete);
         }
@@ -45,13 +43,12 @@ public class CardMotion : MonoBehaviour
     private void PileToOpponentHand(Action complete)
     {
         MotionManager.AddMotion();
-        HandUI.Instance.InsertCard(entity, isController);
+        HandUI.Instance.InsertCard(entity);
         curStatus = status.inHand;
-        CardBehaviour.Instance.AddNewCard(entity);
 
         render.sortingOrder = 1000;
 
-        MoveToPosition(HandUI.Instance.GetCardPosition(entity, isController),
+        MoveToPosition(HandUI.Instance.GetCardPosition(entity),
             HandUI.Instance.cardInOpponentHand.Count * 2, false, 10, () =>
          {
              MotionManager.RunComplete();
@@ -112,10 +109,10 @@ public class CardMotion : MonoBehaviour
 
     public void MoveToSlot()
     {
-        if (BoardUI.Instance.InsertToSlot(entity, isController))
+        if (BoardUI.Instance.InsertToSlot(entity))
         {
             curStatus = status.inSlot;
-            HandUI.Instance.RemoveCard(entity, isController);
+            HandUI.Instance.RemoveCard(entity);
         }
     }
 
@@ -162,12 +159,10 @@ public class CardMotion : MonoBehaviour
         await new WaitForSeconds(0.2f);
 
         //move to hand
-        HandUI.Instance.InsertCard(entity, isController);
+        HandUI.Instance.InsertCard(entity);
         curStatus = status.inHand;
-
-        CardBehaviour.Instance.AddNewCard(entity);
-
-        MoveToPosition(HandUI.Instance.GetCardPosition(entity, isController),
+        
+        MoveToPosition(HandUI.Instance.GetCardPosition(entity),
             HandUI.Instance.cardInControllerHand.Count * 2, false, 20, () =>
             {
                 MotionManager.RunComplete();
@@ -213,7 +208,7 @@ public class CardMotion : MonoBehaviour
             onDeslect?.Invoke(entity);
         }
 
-        if (!moving && isController)
+        if (!moving && entity.isController)
         {
             if (cardTran.position != normalPos) cardTran.position = Vector3.MoveTowards(cardTran.position, normalPos, Time.deltaTime * 20);
         }

@@ -25,6 +25,23 @@ public class BoardUI : MonoBehaviour {
     public SlotUI[] controllerSlotUIs = new SlotUI[5];
     public SlotUI[] opponentSlotUIs = new SlotUI[5];
 
+    //get mogi has not yet attacked
+    public List<MogiEntity> MogiInBoardNotAttacked(bool isController)
+    {
+        List<MogiEntity> mogis = MogiInBoard(isController);
+        List<MogiEntity> notAttack = new List<MogiEntity>();
+
+        for (int i = 0; i < mogis.Count; i++)
+        {
+            if (!mogis[i].hadAttack)
+            {
+                notAttack.Add(mogis[i]);
+            }
+        }
+
+        return notAttack;
+    }
+
     public List<MogiEntity> MogiInBoard(bool isController)
     {
         SlotUI[] slots = null;
@@ -101,11 +118,11 @@ public class BoardUI : MonoBehaviour {
         return null;
     }
 
-    public bool InsertToSlot(CardEntity card, bool toController)
+    public bool InsertToSlot(CardEntity card)
     {
         SlotUI[] slots = null;
 
-        if (toController)
+        if (card.isController)
         {
             slots = controllerSlotUIs;
         }
@@ -126,11 +143,11 @@ public class BoardUI : MonoBehaviour {
         return false;
     }
 
-    public void PutOnTopMogi(CardEntity moveCard, MogiEntity mogiCard, bool toController)
+    public void PutOnTopMogi(CardEntity moveCard, MogiEntity mogiCard)
     {
         SlotUI[] slots = null;
 
-        if (toController)
+        if (moveCard.isController)
         {
             slots = controllerSlotUIs;
         }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CardMogiDisplay : CardDisplay
 {
-    public new SpriteAnimination animation;
+    public SpriteAnimination ani;
     public SpriteRenderer animationRender;
     public SpriteRenderer bgRender;
     public Sprite frontBG;
@@ -37,8 +37,8 @@ public class CardMogiDisplay : CardDisplay
 
         animationRender.flipX = true;
         animationRender.enabled = true;
-        animation.sprites = sprite;
-        animation.enabled = true;
+        ani.sprites = sprite;
+        ani.enabled = true;
         hadShowFront = true;
     }
 

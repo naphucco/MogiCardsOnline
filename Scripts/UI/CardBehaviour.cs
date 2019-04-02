@@ -19,15 +19,15 @@ public class CardBehaviour : MonoBehaviour
         }
     }
 
-    public List<CardEntity> cardMotions = new List<CardEntity>();
+    public CardEntity selectingCard { get; set; }
 
-    private CardEntity selectingCard;
+    public List<CardEntity> cardMotions = new List<CardEntity>();
 
     public void AddNewCard(CardEntity card)
     {
         cardMotions.Add(card);
 
-        if (card.motion.isController)
+        if (card.isController)
         {
             card.motion.AddDeselectCardEvent(ControllerBehaviour.Instance.OnDeselectCard);
             card.motion.AddSelectingCardEvent(ControllerBehaviour.Instance.OnSelectingCard);
@@ -44,73 +44,72 @@ public class CardBehaviour : MonoBehaviour
     {
         if (cardMotions.Count > 0)
         {
-            if (TurnManager.Instance.isOpponentTurn)
+            if (Input.GetMouseButton(0) && !TurnManager.Instance.isOpponentTurn)
             {
-                selectingCard = null;
-            }
-            else
-            {
-                if (Input.GetMouseButton(0))
+                if (selectingCard == null)
                 {
-                    if (selectingCard == null)
+                    if (!MotionManager.running)
                     {
-                        if (!MotionManager.running)
-                        {
-                            var mousePos = Input.mousePosition;
-                            mousePos.z = -Camera.main.transform.position.z; // select distance = 10 units from the camera
-                            Vector3 choosePos = Camera.main.ScreenToWorldPoint(mousePos);
-                            choosePos.z = 0;
+                        var mousePos = Input.mousePosition;
+                        mousePos.z = -Camera.main.transform.position.z; // select distance = 10 units from the camera
+                        Vector3 choosePos = Camera.main.ScreenToWorldPoint(mousePos);
+                        choosePos.z = 0;
 
-                            //Priority for the card is added later
-                            //Select only one card
-                            for (int i = HandUI.Instance.cardInControllerHand.Count - 1; i >= 0; i--)
+                        //Priority for the card is added later
+                        //Select only one card
+                        for (int i = HandUI.Instance.cardInControllerHand.Count - 1; i >= 0; i--)
+                        {
+                            if (selectingCard == null)
                             {
-                                if (selectingCard == null)
+                                if (HandUI.Instance.cardInControllerHand[i].motion.render.bounds.Contains(choosePos))
                                 {
-                                    if (HandUI.Instance.cardInControllerHand[i].motion.render.bounds.Contains(choosePos))
-                                    {
-                                        selectingCard = HandUI.Instance.cardInControllerHand[i];
-                                        selectingCard.motion.Selecting();
-                                        break;
-                                    }
+                                    selectingCard = HandUI.Instance.cardInControllerHand[i];
+                                    break;
                                 }
                             }
-                            
-                            for (int i = 0; i < BoardUI.Instance.controllerSlotUIs.Length; i++)
-                            {
-                                if (selectingCard == null)
-                                {                                    
-                                    if (BoardUI.Instance.controllerSlotUIs[i].cardEntity != null)
-                                    {
-                                        CardEntity card = BoardUI.Instance.controllerSlotUIs[i].cardEntity;
+                        }
 
-                                        if (card.motion.render.bounds.Contains(choosePos))
-                                        {
-                                            selectingCard = BoardUI.Instance.controllerSlotUIs[i].cardEntity;
-                                            selectingCard.motion.Selecting();
-                                            break;
-                                        }
+                        for (int i = 0; i < BoardUI.Instance.controllerSlotUIs.Length; i++)
+                        {
+                            if (selectingCard == null)
+                            {
+                                if (BoardUI.Instance.controllerSlotUIs[i].cardEntity != null)
+                                {
+                                    CardEntity card = BoardUI.Instance.controllerSlotUIs[i].cardEntity;
+
+                                    if (card.motion.render.bounds.Contains(choosePos))
+                                    {
+                                        selectingCard = BoardUI.Instance.controllerSlotUIs[i].cardEntity;
+                                        break;
                                     }
                                 }
                             }
                         }
                     }
+                }
+
+                for (int i = 0; i < cardMotions.Count; i++)
+                {
+                    if (cardMotions[i] != selectingCard)
+                    {
+                        cardMotions[i].motion.DeSelecting();
+                    }
                     else
                     {
-                        selectingCard.motion.Selecting();
+                        cardMotions[i].motion.Selecting();
                     }
                 }
-                else
-                {
-                    selectingCard = null;
-                }
             }
-
-            for (int i = 0; i < cardMotions.Count ; i++)
+            else
             {
-                if (cardMotions[i] != selectingCard)
+                selectingCard = null;
+
+                for (int i = 0; i < cardMotions.Count; i++)
                 {
-                    cardMotions[i].motion.DeSelecting();
+                    if (cardMotions[i] != selectingCard)
+                    {
+                        cardMotions[i].motion.DeSelecting();
+                    }
                 }
             }
         }

@@ -18,6 +18,8 @@ public class ControllerBehaviour : MonoBehaviour {
         }
     }
 
+    private bool lookingForTarget;//draw mouse
+
     public void OnSelectCard(CardEntity card)
     {
         if (card.motion.curStatus == CardMotion.status.inSlot)
@@ -25,10 +27,17 @@ public class ControllerBehaviour : MonoBehaviour {
             if (card.info.type == Card.Type.mogi)
             {
                 List<MogiEntity> opponentMogis = BoardUI.Instance.MogiInBoard(false);
-
-                for (int i = 0; i < opponentMogis.Count; i++)
+                
+                if (!((MogiEntity)card).hadAttack)
                 {
-                    ((CardMogiDisplay)opponentMogis[i].display).Targeted();
+                    for (int i = 0; i < opponentMogis.Count; i++)
+                    {
+                        ((CardMogiDisplay)opponentMogis[i].display).Targeted();
+                    }
+
+                    lookingForTarget = true;
+
+                    AttackArrow.Instance.Display(card.motion.cardTran);
                 }
             }
         }
@@ -46,21 +55,7 @@ public class ControllerBehaviour : MonoBehaviour {
             //front of all               
             card.motion.render.sortingOrder = 1000;
             card.motion.cardTran.position = choosePos;
-        }
-        else if (card.motion.curStatus == CardMotion.status.inSlot)
-        {
-            if (card.info.type == Card.Type.mogi)
-            {
-                List<MogiEntity> opponentMogis = BoardUI.Instance.MogiInBoard(false);
-
-                for (int i = 0; i < opponentMogis.Count; i++)
-                {
-                    ((CardMogiDisplay)opponentMogis[i].display).Targeted();
-                }
-                
-                AttackArrow.Instance.Display(card.motion.cardTran.position, choosePos);
-            }
-        }
+        }       
     }
 
     public void OnDeselectCard(CardEntity card)
@@ -72,11 +67,13 @@ public class ControllerBehaviour : MonoBehaviour {
             ((CardMogiDisplay)opponentMogis[i].display).StopTargeted();
         }
 
-        CheckMoveToControllerBoard(card); //move to board
-        CheckMogiControllerAttack(card); //mogi attack
+        CheckMoveToBoard(card); //move to board
+        CheckMogiStartAttack(card); //mogi attack
+
+        lookingForTarget = false;
     }
 
-    private void CheckMoveToControllerBoard(CardEntity card)
+    private void CheckMoveToBoard(CardEntity card)
     {
         if (HandUI.Instance.cardInControllerHand.Contains(card))
         {
@@ -117,12 +114,11 @@ public class ControllerBehaviour : MonoBehaviour {
         }
     }
 
-    private void CheckMogiControllerAttack(CardEntity card)
+    private void CheckMogiStartAttack(CardEntity card)
     {
-        if (AttackArrow.Instance.showing)
+        if (lookingForTarget)
         {
-            AttackArrow.Instance.Hide();
-
+            AttackArrow.Instance.HideArrow();
             Vector3 mousePos = Input.mousePosition;
             mousePos.z = -Camera.main.transform.position.z; // select distance = 10 units from the camera
             Vector3 choosePos = Camera.main.ScreenToWorldPoint(mousePos);
@@ -138,14 +134,12 @@ public class ControllerBehaviour : MonoBehaviour {
                     ((CardMogiMotion)card.motion)
                         .MogiAttackAnimation((CardMogiMotion)opponentMogis[i].motion,() => 
                     {
-                        ((MogiEntity)card).Fight(opponentMogis[i].GetComponent<MogiEntity>());
+                        ((MogiEntity)card).Attack(opponentMogis[i]);
                     });
 
                     break;
                 }
             }
         }
-    }
-
-    
+    }    
 }

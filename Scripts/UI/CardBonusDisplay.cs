@@ -4,20 +4,20 @@ using UnityEngine;
 
 public class CardBonusDisplay : CardDisplay {
 
-    protected new SpriteAnimination animation;
+    protected SpriteAnimination ani;
     private Sprite[] sprite;
         
     public override void Init(string cardName)
     {
         base.Init(cardName);
-        animation = GetComponent<SpriteAnimination>();
+        ani = GetComponent<SpriteAnimination>();
         sprite = CardData.Instance.GetBonus(cardName, false).display;
     }
 
     public override void ShowFrontOfCard()
     {
         base.ShowFrontOfCard();
-        animation.sprites = sprite;
-        animation.enabled = true;
+        ani.sprites = sprite;
+        ani.enabled = true;
     }
 }

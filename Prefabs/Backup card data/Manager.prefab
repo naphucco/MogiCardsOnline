@@ -22,7 +22,11 @@ GameObject:
   - component: {fileID: 114980550975417476}
   - component: {fileID: 114679292724260728}
   - component: {fileID: 114524239783335968}
+  - component: {fileID: 114234402918740208}
+  - component: {fileID: 114984896930953692}
+  - component: {fileID: 114735821964747214}
   - component: {fileID: 114639408961897500}
+  - component: {fileID: 114804923363877018}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -43,6 +47,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114234402918740208
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1590784695954484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7c7c27105ea5d148a942a19093f2b1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effectsPrefab:
+  - {fileID: 1357290824296162, guid: ea7176a997cdeda4293bedb11c3d79e3, type: 2}
+  - {fileID: 1186811122235576, guid: e1701e185b29b3d408606f2849e0272c, type: 2}
 --- !u!114 &114524239783335968
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -98,6 +116,36 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3d8e7a131ca0db742b7b7356e14817ed, type: 2}
   - {fileID: 11400000, guid: ed4dd9c370d6c6148a18330fb13f3b91, type: 2}
   - {fileID: 11400000, guid: a6894879c5b878a41a694b1ceeb5d2d7, type: 2}
+--- !u!114 &114735821964747214
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1590784695954484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0048c66fcfbe73b4ebf3f97151628817, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arrowObject: {fileID: 0}
+  arrow: {fileID: 0}
+  dotArrow:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+--- !u!114 &114804923363877018
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1590784695954484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cbe427f635cc484e987267d6c5d926b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114980550975417476
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -110,10 +158,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller:
-    slots:
-      number: 5
-    hand:
-      cards: []
     piles:
       mogiPile:
         discardPile:
@@ -124,10 +168,6 @@ MonoBehaviour:
           cardInPile: []
         cardInPile: []
   opponent:
-    slots:
-      number: 5
-    hand:
-      cards: []
     piles:
       mogiPile:
         discardPile:
@@ -137,3 +177,17 @@ MonoBehaviour:
         discardPile:
           cardInPile: []
         cardInPile: []
+--- !u!114 &114984896930953692
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1590784695954484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b57070c18171a2448bd93ce4df9e8ff5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  force: 400
+  radius: 5
+  upliftModifer: 0

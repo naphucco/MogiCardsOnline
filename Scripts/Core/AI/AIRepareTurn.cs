@@ -12,7 +12,15 @@ public class AIRepareTurn : StateMachineBehaviour {
         preparing = true;
         AIBehaviour.Instance.inAction = true;
 
-        PileUI.Instance.DrawCard(false, 1, true, Card.Type.unknow, () => { AIBehaviour.Instance.inAction = false; });        
+        if (HandUI.Instance.MogisInHand(false).Count > HandUI.Instance.cardInOpponentHand.Count)
+        {
+            //Avoid draw too many mogi
+            PileUI.Instance.DrawCard(false, 1, true, Card.Type.bonus, () => { AIBehaviour.Instance.inAction = false; });
+        }
+        else
+        {
+            PileUI.Instance.DrawCard(false, 1, true, Card.Type.unknow, () => { AIBehaviour.Instance.inAction = false; });
+        }
         
         //test
         /*

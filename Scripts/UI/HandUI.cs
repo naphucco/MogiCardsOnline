@@ -52,10 +52,10 @@ public class HandUI : MonoBehaviour {
         return mogisInhand;
     }
 
-    public void InsertCard(CardEntity card,bool toController)
+    public void InsertCard(CardEntity card)
     {
         List <CardEntity> cardInHand = null;
-        if (toController) cardInHand = cardInControllerHand;
+        if (card.isController) cardInHand = cardInControllerHand;
         else cardInHand = cardInOpponentHand;
         cardInHand.Add(card);
 
@@ -65,15 +65,15 @@ public class HandUI : MonoBehaviour {
             for (int i = 0; i < cardInHand.Count; i++)
             {
                 CardEntity oldCard = cardInHand[i];
-                cardInHand[i].motion.MoveToPosition(GetCardPosition(oldCard, toController), 1 + i * 2, false, 4);
+                cardInHand[i].motion.MoveToPosition(GetCardPosition(oldCard), 1 + i * 2, false, 4);
             }
         }
     }
 
-    public void RemoveCard(CardEntity card, bool isController)
+    public void RemoveCard(CardEntity card)
     {
         List<CardEntity> cardInHand = null;
-        if (isController) cardInHand = cardInControllerHand;
+        if (card.isController) cardInHand = cardInControllerHand;
         else cardInHand = cardInOpponentHand;
 
         cardInHand.Remove(card);
@@ -82,19 +82,19 @@ public class HandUI : MonoBehaviour {
         for (int i = 0; i < cardInHand.Count; i++)
         {
             CardEntity cardRemain = cardInHand[i];
-            cardInHand[i].motion.MoveToPosition(GetCardPosition(cardRemain, isController), 1 + i * 2, false, 4);
+            cardInHand[i].motion.MoveToPosition(GetCardPosition(cardRemain), 1 + i * 2, false, 4);
         }
     }
 
-    public Vector3 GetCardPosition(CardEntity card, bool isController)
+    public Vector3 GetCardPosition(CardEntity card)
     {
         List<CardEntity> cardInHand = null;
-        if (isController) cardInHand = cardInControllerHand;
+        if (card.isController) cardInHand = cardInControllerHand;
         else cardInHand = cardInOpponentHand;
 
         if (cardInHand.Count == 1)
         {
-            if (isController)
+            if (card.isController)
                 return controllerHandPos;
             else
                 return opponentHandPos;
@@ -122,7 +122,7 @@ public class HandUI : MonoBehaviour {
 
             Vector3 pos = Vector3.zero;
 
-            if (isController) pos = controllerHandPos;
+            if (card.isController) pos = controllerHandPos;
             else pos = opponentHandPos;
 
             float cardDistance = handWith / (cardInHand.Count);

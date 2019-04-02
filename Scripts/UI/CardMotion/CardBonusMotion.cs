@@ -5,8 +5,8 @@ public class CardBonusMotion : CardMotion {
 
     public void MoveToTopOfMogi(CardEntity mogi)
     {
-        HandUI.Instance.RemoveCard(entity, isController);
-        BoardUI.Instance.PutOnTopMogi(entity, (MogiEntity)mogi, isController);
+        HandUI.Instance.RemoveCard(entity);
+        BoardUI.Instance.PutOnTopMogi(entity, (MogiEntity)mogi);
     }
 
     public async void Dissolving(Action complete = null)
@@ -65,7 +65,6 @@ public class CardBonusMotion : CardMotion {
 
         MoveToTopOfMogi(mogi);
         Dissolving(() => {
-            AIBehaviour.Instance.inAction = false;
             complete.Invoke();
         });
     }

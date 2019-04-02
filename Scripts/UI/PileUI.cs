@@ -80,7 +80,6 @@ public class PileUI : MonoBehaviour {
                     if (numberInQueue == 1)
                     {
                         drawMogi = UnityEngine.Random.Range(0, 2);
-                        
                     }
                     else
                     {
@@ -163,7 +162,6 @@ public class PileUI : MonoBehaviour {
         {
             pos = mogisPilePos.position;
             prefab = mogisCardPrefab;
-            
         }
         
         GameObject cardObj = Instantiate(prefab, pos, Quaternion.identity);
@@ -174,10 +172,9 @@ public class PileUI : MonoBehaviour {
         display.Init(cardName);
         cardObj.name = cardName;        
         CardMotion motion = cardObj.GetComponent<CardMotion>();        
-        motion.Init(entity, byController);
-        entity.Init(info, display, motion);
+        motion.Init(entity);
+        entity.Init(info, display, motion, byController);
         
         motion.PileToHand(conpleteEffect);
-        
     }
 }

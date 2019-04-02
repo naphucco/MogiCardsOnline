@@ -18,59 +18,88 @@ public class AttackArrow : MonoBehaviour {
             return instance;
         }
     }
-
-    public bool showing { get; private set; }
-
+    
     public GameObject arrowObject;       
     public Transform arrow;
     public Transform[] dotArrow;
 
+    private bool showing;
     private Vector3 start;
-    private Vector3 end;
+    private Transform selecting;
 
-    public void Display(Vector3 start, Vector3 end)
+    public void Display(Transform selecting)
     {
-        this.start = start;
-        this.end = end;
+        this.selecting = selecting;
+        this.start = selecting.position;
         showing = true;
-        UpdateArrow();
         arrowObject.SetActive(true);
     }
 
-    public void Hide()
+    public void HideArrow()
     {
-        showing = false;
-        arrowObject.SetActive(false);
+        if (Input.GetMouseButtonUp(0))
+        {
+            showing = false;
+            arrowObject.SetActive(false);
+        }
+    }
+
+    private void CheckCardAlive()
+    {
+        //hide if card is dead
+        if (!selecting)
+        {
+            HideArrow();
+        }
     }
 
     private void UpdateArrow()
     {
-        Vector3 startPos = new Vector3(start.x, start.y, 0);        
-        Vector3 targetPos = new Vector3(end.x, end.y, 0);
-
-        //Vector3 midPointVector = (targetPos + startPos) / 2;
-        //arrow.position = midPointVector;
-
-        arrow.position = targetPos;
-
-        for (int i = 0; i < dotArrow.Length; i++)
+        if (showing)
         {
-            float lerp = (float)i / dotArrow.Length;
-            dotArrow[i].position = Vector3.Lerp(startPos, targetPos, lerp);
+            Vector3 startPos = new Vector3(start.x, start.y, 0);
+
+            Vector3 mousePos = Input.mousePosition;
+            mousePos.z = -Camera.main.transform.position.z; // select distance = 10 units from the camera
+            Vector3 choosePos = Camera.main.ScreenToWorldPoint(mousePos);
+            choosePos.z = 0;
+
+            Vector3 targetPos = choosePos;
+
+            //Vector3 midPointVector = (targetPos + startPos) / 2;
+            //arrow.position = midPointVector;
+
+            arrow.position = targetPos;
+
+            for (int i = 0; i < dotArrow.Length; i++)
+            {
+                float lerp = (float)i / dotArrow.Length;
+                dotArrow[i].position = Vector3.Lerp(startPos, targetPos, lerp);
+            }
+
+            Vector3 relative = targetPos - startPos;
+            //float maggy = relative.magnitude;
+
+
+            //arrow.localScale = new Vector3(maggy / 2, 1, 0);
+            //        Quaternion rotationVector = Quaternion.LookRotation (relative);
+            //        rotationVector.z = 0;
+            //        rotationVector.w = 0;
+            //        transform.rotation = rotationVector - 90;
+
+            float angle = Mathf.Atan2(relative.y, relative.x) * Mathf.Rad2Deg - 90;
+            Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
+            arrow.rotation = q;
         }
-
-        Vector3 relative = targetPos - startPos;
-        //float maggy = relative.magnitude;
-
-
-        //arrow.localScale = new Vector3(maggy / 2, 1, 0);
-        //        Quaternion rotationVector = Quaternion.LookRotation (relative);
-        //        rotationVector.z = 0;
-        //        rotationVector.w = 0;
-        //        transform.rotation = rotationVector - 90;
-
-        float angle = Mathf.Atan2(relative.y, relative.x) * Mathf.Rad2Deg - 90;
-        Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
-        arrow.rotation = q;
     }
+
+    #region Unity
+
+    private void Update()
+    {
+        CheckCardAlive();
+        UpdateArrow();
+    }
+
+    #endregion
 }
