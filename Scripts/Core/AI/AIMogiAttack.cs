@@ -38,7 +38,7 @@ public class AIMogiAttack : StateMachineBehaviour {
             .MogiAttackAnimation((CardMogiMotion)targetCard.motion, () =>
         {
             AIBehaviour.Instance.inAction = false;
-            ((MogiEntity)attackCard).Attack(targetCard);
+            attackCard.Attack(targetCard);
         });
 
         await new WaitUntil(() => AIBehaviour.Instance.inAction);
