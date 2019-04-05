@@ -18,9 +18,12 @@ public class Game : MonoBehaviour {
         }
     }
 
+    public enum GameType { botMatch }
+
     //we have 2 player in game
     public Player controller;
     public Player opponent;
+    public GameType gameType = GameType.botMatch;
     
     //reapare for battle
     private void RepareBoard()

@@ -9,10 +9,22 @@ public abstract class CardEntity : MonoBehaviour
     public abstract CardMotion motion { get; set; }
     public abstract Card info { get; set; }
     public abstract bool isController { get; set; }
+    public status curStatus { get; set; }
+    public enum status { none, inHand, inSlot, attacking }
 
     public virtual void Init(Card info, CardDisplay display, CardMotion motion, bool isController)
     {
+        curStatus = status.none;
         CardBehaviour.Instance.AddNewCard(this);
+    }
+
+    public void MoveToSlot()
+    {
+        if (BoardUI.Instance.InsertToSlot(this))
+        {
+            curStatus = status.inSlot;
+            HandUI.Instance.RemoveCard(this);
+        }
     }
 
     private Action onDiscard;

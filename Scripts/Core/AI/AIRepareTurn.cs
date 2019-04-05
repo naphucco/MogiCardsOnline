@@ -11,7 +11,7 @@ public class AIRepareTurn : StateMachineBehaviour {
 
         preparing = true;
         AIBehaviour.Instance.inAction = true;
-
+        
         if (HandUI.Instance.MogisInHand(false).Count > HandUI.Instance.cardInOpponentHand.Count)
         {
             //Avoid draw too many mogi

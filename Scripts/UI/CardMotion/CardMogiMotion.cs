@@ -18,13 +18,13 @@ public class CardMogiMotion : CardMotion
 
     private async void MogiDeadEffect()
     {
-        if (curStatus == status.inSlot)
+        if (entity.curStatus == CardEntity.status.inSlot)
         {
             await new WaitForSeconds(0.16f);
         }
-        else if(curStatus == status.attacking)
+        else if(entity.curStatus == CardEntity.status.attacking)
         {
-            await new WaitUntil(() => curStatus == status.inSlot);
+            await new WaitUntil(() => entity.curStatus == CardEntity.status.inSlot);
         }
 
         EffectManager.Instance.Instantiate("MogiCardDead", cardTran.position);
@@ -33,7 +33,7 @@ public class CardMogiMotion : CardMotion
 
     public async void MogiAttackAnimation(CardMogiMotion target, Action onHitTarget)
     {
-        curStatus = status.attacking;
+        entity.curStatus = CardEntity.status.attacking;
         render.sortingOrder = 1000;
         Vector3 startPosition = transform.position;
 
@@ -61,7 +61,7 @@ public class CardMogiMotion : CardMotion
 
         render.sortingOrder = normalsortingOrder;
         cardTran.position = startPosition;
-        curStatus = status.inSlot;
+        entity.curStatus = CardEntity.status.inSlot;
     }
 
     //whne under attack

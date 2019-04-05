@@ -12,7 +12,7 @@ public class MotionManager : MonoBehaviour {
         runTotal++;
     }
 
-    public static void RunComplete()
+    public static void RemoveMotion()
     {
         runTotal--;
     }

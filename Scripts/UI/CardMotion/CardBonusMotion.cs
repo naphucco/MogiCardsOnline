@@ -6,14 +6,14 @@ public class CardBonusMotion : CardMotion {
     public void MoveToTopOfMogi(CardEntity mogi)
     {
         HandUI.Instance.RemoveCard(entity);
-        BoardUI.Instance.PutOnTopMogi(entity, (MogiEntity)mogi);
+        SlotUI slotHaveMogi = BoardUI.Instance.PutOnTopMogi(entity, (MogiEntity)mogi);
+        this.MoveToSlot(slotHaveMogi, true, Dissolving);
     }
 
-    public async void Dissolving(Action complete = null)
+    private async void Dissolving()
     {
         await new WaitForSeconds(1f);
         CardBehaviour.Instance.RemoveCard(entity);
-        complete?.Invoke();
         EffectManager.Instance.Instantiate("BonusIsUsed", cardTran.position);
         Destroy(gameObject);
     }
@@ -57,15 +57,16 @@ public class CardBonusMotion : CardMotion {
 
         render.flipX = false;
         cardTran.rotation = Quaternion.identity;
-        cardUI.RotationComplete();
+        cardUI.ShowFrontComplete();
 
         await new WaitForSeconds(0.2f);
 
-        MotionManager.RunComplete();
+        MotionManager.RemoveMotion();
 
         MoveToTopOfMogi(mogi);
-        Dissolving(() => {
-            complete.Invoke();
-        });
+
+        await new WaitUntil(() => !MotionManager.running);
+
+        complete?.Invoke();
     }
 }

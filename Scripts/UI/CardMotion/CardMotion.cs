@@ -5,10 +5,7 @@ public class CardMotion : MonoBehaviour
 {
     public SpriteRenderer render { get; private set; }
     public Transform cardTran { get; private set; }    
-    public bool moving { get; private set; }
-    public status curStatus { get; set; }
-
-    public enum status { none, inHand, inSlot, attacking }
+    public bool moving { get; private set; }    
         
     private bool showingDetail;
     private Vector3 normalPos;    
@@ -20,8 +17,7 @@ public class CardMotion : MonoBehaviour
 
     public virtual void Init(CardEntity entity)
     {
-        cardTran = transform;
-        curStatus = status.none;
+        cardTran = transform;        
         normalPos = cardTran.position;
         this.entity = entity;
         render = GetComponent<SpriteRenderer>();
@@ -44,76 +40,75 @@ public class CardMotion : MonoBehaviour
     {
         MotionManager.AddMotion();
         HandUI.Instance.InsertCard(entity);
-        curStatus = status.inHand;
+        entity.curStatus = CardEntity.status.inHand;
 
         render.sortingOrder = 1000;
 
         MoveToPosition(HandUI.Instance.GetCardPosition(entity),
             HandUI.Instance.cardInOpponentHand.Count * 2, false, 10, () =>
          {
-             MotionManager.RunComplete();
+             MotionManager.RemoveMotion();
              complete?.Invoke();
          });
     }
 
-    public async void HandToOpponentSlot(SlotUI slot, Action complete)
+    public async void MoveToSlot(SlotUI slot,bool moveToTop,Action complete)
     {
         MotionManager.AddMotion();
-        bool moveComplete = false;
-        //move to center
-        MoveToPosition(new Vector3(0, 0, -5), 1000, true, 20, () =>
+
+        if (!cardUI.showFront)
         {
-            moveComplete = true;
-        });
+            bool moveComplete = false;
+            //move to center
+            MoveToPosition(new Vector3(0, 0, -5), 1000, true, 20, () =>
+            {
+                moveComplete = true;
+            });
 
-        await new WaitUntil(() => moveComplete);
-        await new WaitForSeconds(0.2f);
+            await new WaitUntil(() => moveComplete);
 
-        Quaternion midle = Quaternion.Euler(0, -90, 0);
+            await new WaitForSeconds(0.2f);
 
-        //rotation
-        float timeCouter = 0;
-        while (timeCouter < 1)
-        {
-            timeCouter += Time.deltaTime * 10f;
-            cardTran.rotation = Quaternion.Lerp(Quaternion.identity, midle, timeCouter);
-            await new WaitForUpdate();
+            Quaternion midle = Quaternion.Euler(0, -90, 0);
+
+            //rotation
+            float timeCouter = 0;
+            while (timeCouter < 1)
+            {
+                timeCouter += Time.deltaTime * 10f;
+                cardTran.rotation = Quaternion.Lerp(Quaternion.identity, midle, timeCouter);
+                await new WaitForUpdate();
+            }
+
+            cardUI.ShowFrontOfCard();
+
+            render.flipX = true;
+            Quaternion last = Quaternion.Euler(0, -180, 0);
+            timeCouter = 0;
+
+            while (timeCouter < 1)
+            {
+                timeCouter += Time.deltaTime * 10f;
+                cardTran.rotation = Quaternion.Lerp(midle, last, timeCouter);
+                await new WaitForUpdate();
+            }
+
+            render.flipX = false;
+            cardTran.rotation = Quaternion.identity;
+            cardUI.ShowFrontComplete();
+
+            await new WaitForSeconds(0.2f);
         }
 
-        cardUI.ShowFrontOfCard();
-        render.flipX = true;
-        Quaternion last = Quaternion.Euler(0, -180, 0);
-        timeCouter = 0;
+        int sorting = 1;
+        if (moveToTop) sorting = 1000;
 
-        while (timeCouter < 1)
-        {
-            timeCouter += Time.deltaTime * 10f;
-            cardTran.rotation = Quaternion.Lerp(midle, last, timeCouter);
-            await new WaitForUpdate();
-        }
-
-        render.flipX = false;
-        cardTran.rotation = Quaternion.identity;
-        cardUI.RotationComplete();
-
-        await new WaitForSeconds(0.2f);
-
-        MoveToPosition(slot.slotTransform.position, 1, false, 10, () =>
-        {
+        MoveToPosition(slot.slotTransform.position, sorting, false, 10, () => {
             //move to hand
-            MotionManager.RunComplete();
-            MoveToSlot();
+            MotionManager.RemoveMotion();
+            if(!moveToTop) entity.MoveToSlot();
             complete.Invoke();
         });
-    }
-
-    public void MoveToSlot()
-    {
-        if (BoardUI.Instance.InsertToSlot(entity))
-        {
-            curStatus = status.inSlot;
-            HandUI.Instance.RemoveCard(entity);
-        }
     }
 
     private async void PileToControllerHand(Action complete)
@@ -154,18 +149,18 @@ public class CardMotion : MonoBehaviour
 
         render.flipX = false;
         cardTran.rotation = Quaternion.identity;
-        cardUI.RotationComplete();
+        cardUI.ShowFrontComplete();
 
         await new WaitForSeconds(0.2f);
 
         //move to hand
         HandUI.Instance.InsertCard(entity);
-        curStatus = status.inHand;
+        entity.curStatus = CardEntity.status.inHand;
         
         MoveToPosition(HandUI.Instance.GetCardPosition(entity),
             HandUI.Instance.cardInControllerHand.Count * 2, false, 20, () =>
             {
-                MotionManager.RunComplete();
+                MotionManager.RemoveMotion();
                 complete?.Invoke();
             });
     }

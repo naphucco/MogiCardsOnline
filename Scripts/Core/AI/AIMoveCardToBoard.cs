@@ -78,7 +78,7 @@ public class AIMoveCardToBoard : StateMachineBehaviour {
 
             if (cardData.putOn == Card.PutOn.emptySlot)
             {
-                card.HandToOpponentSlot(BoardUI.Instance.GetFirstEmptySlot(false), () =>
+                card.MoveToSlot(BoardUI.Instance.GetFirstEmptySlot(false), false, () =>
                 {
                     AIBehaviour.Instance.inAction = false;
                     //repeat

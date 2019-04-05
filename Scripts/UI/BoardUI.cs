@@ -42,6 +42,31 @@ public class BoardUI : MonoBehaviour {
         return notAttack;
     }
 
+    public List<MogiEntity> CardInBoard(bool isController)
+    {
+        SlotUI[] slots = null;
+        List<MogiEntity> cardMogis = new List<MogiEntity>();
+
+        if (isController)
+        {
+            slots = controllerSlotUIs;
+        }
+        else
+        {
+            slots = opponentSlotUIs;
+        }
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i].cardEntity != null)
+            {
+                cardMogis.Add((MogiEntity)slots[i].cardEntity);
+            }
+        }
+
+        return cardMogis;
+    }
+
     public List<MogiEntity> MogiInBoard(bool isController)
     {
         SlotUI[] slots = null;
@@ -143,7 +168,7 @@ public class BoardUI : MonoBehaviour {
         return false;
     }
 
-    public void PutOnTopMogi(CardEntity moveCard, MogiEntity mogiCard)
+    public SlotUI PutOnTopMogi(CardEntity moveCard, MogiEntity mogiCard)
     {
         SlotUI[] slots = null;
 
@@ -161,7 +186,10 @@ public class BoardUI : MonoBehaviour {
             if (slots[i].cardEntity == mogiCard)
             {
                 slots[i].PutOnTopOfMogi(moveCard, mogiCard);
+                return slots[i];
             }
         }
+
+        return null;
     }
 }

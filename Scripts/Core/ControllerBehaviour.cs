@@ -22,7 +22,7 @@ public class ControllerBehaviour : MonoBehaviour {
 
     public void OnSelectCard(CardEntity card)
     {
-        if (card.motion.curStatus == CardMotion.status.inSlot)
+        if (card.curStatus == CardEntity.status.inSlot)
         {
             if (card.info.type == Card.Type.mogi)
             {
@@ -50,7 +50,7 @@ public class ControllerBehaviour : MonoBehaviour {
         Vector3 choosePos = Camera.main.ScreenToWorldPoint(mousePos);
         choosePos.z = 0;
 
-        if (card.motion.curStatus == CardMotion.status.inHand)
+        if (card.curStatus == CardEntity.status.inHand)
         {
             //front of all               
             card.motion.render.sortingOrder = 1000;
@@ -84,7 +84,7 @@ public class ControllerBehaviour : MonoBehaviour {
                 {
                     if (card.info.putOn == Card.PutOn.emptySlot)
                     {
-                        card.motion.MoveToSlot();
+                        card.MoveToSlot();
                     }
                     else
                     {
@@ -108,7 +108,6 @@ public class ControllerBehaviour : MonoBehaviour {
                 {
                     CardBonusMotion cardBonus = (CardBonusMotion)card.motion;
                     cardBonus.MoveToTopOfMogi(mogiCard);
-                    cardBonus.Dissolving();
                 }
             }
         }

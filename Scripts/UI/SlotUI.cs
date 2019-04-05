@@ -16,18 +16,13 @@ public class SlotUI
     }
     public void PutOnTopOfMogi(CardEntity card, MogiEntity mogi)
     {
-        card.motion.MoveToPosition(mogi.motion.cardTran.position, 1000, true, 20, async () =>
+        if (CardData.Instance.GetCard(card.name, false).features != null)
         {
-            await new WaitForSeconds(0.5f);
-
-            if (CardData.Instance.GetCard(card.name, false).features != null)
-            {
-                CardData.Instance.GetCard(card.name, false).features.CashSkill();
-            }
-            else
-            {
-                Debug.Log("not have features");
-            }
-        });
+            CardData.Instance.GetCard(card.name, false).features.CashSkill();
+        }
+        else
+        {
+            Debug.Log("not have features");
+        }
     }
 }

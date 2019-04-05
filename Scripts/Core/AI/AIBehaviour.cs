@@ -23,7 +23,7 @@ public class AIBehaviour : MonoBehaviour {
 
     private Animator behaviourController;
     private bool isAITurn;
-
+    
     private void UpdateBehaviour()
     {
         if (!isAITurn)

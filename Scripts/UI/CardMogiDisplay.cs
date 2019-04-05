@@ -42,9 +42,9 @@ public class CardMogiDisplay : CardDisplay
         hadShowFront = true;
     }
 
-    public override void RotationComplete()
+    public override void ShowFrontComplete()
     {
-        base.RotationComplete();
+        base.ShowFrontComplete();
         animationRender.flipX = false;
     }
 

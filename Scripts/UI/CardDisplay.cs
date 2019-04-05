@@ -5,6 +5,7 @@ using UnityEngine;
 public class CardDisplay : MonoBehaviour {
 
     //public SpriteRenderer render;
+    public bool showFront { get; set; }
 
     public virtual void Init(string cardName)
     {
@@ -16,9 +17,9 @@ public class CardDisplay : MonoBehaviour {
 
     }
 
-    public virtual void RotationComplete()
+    public virtual void ShowFrontComplete()
     {
-
+        showFront = true;
     }
 
     protected virtual void SelectCard()
